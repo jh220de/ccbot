@@ -1,0 +1,5 @@
+.idea/
+out/
+target/
+src/main/resources/META-INF/
+src/main/java/de/jh220/clearchatbot/utils/LoadToken.java
