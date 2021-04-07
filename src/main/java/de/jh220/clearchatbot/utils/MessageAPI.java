@@ -6,35 +6,18 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MessageAPI {
-    public static void deleteMessages(TextChannel channel, int limit) {
-        new Thread(() -> {
-            boolean working = true;
-            while (working) {
-                List<Message> messages = channel.getHistory().retrievePast(limit).complete();
-                messages.removeIf(message -> message.isPinned());
-
-                if (messages.isEmpty()) {
-                    working = false;
-                    return;
-                }
-
-                channel.deleteMessages(messages).complete();
-                working = false;
-                return;
-            }
-        }).start();
-    }
-
-    public static void deleteMessages(MessageReceivedEvent event, int limit, Member member) {
+    public static void deleteMessages(MessageReceivedEvent event, int limit, User user) {
         new Thread(() -> {
             boolean working = true;
             while (working) {
@@ -43,12 +26,18 @@ public class MessageAPI {
                 for (Message message : channel.getHistoryBefore(event.getMessage(), limit).complete().getRetrievedHistory()) {
                     messages.add(message);
                 }
-                if (member != null) {
-                    messages.removeIf(message -> !message.getMember().getId().equals(member.getId()));
+                for (Iterator<Message> iterator = messages.iterator(); iterator.hasNext(); ) {
+                    Message message = iterator.next();
+                    if (user != null) {
+                        if (!message.getAuthor().getId().equals(user.getId()) | message.isPinned()) {
+                            iterator.remove();
+                        }
+                    } else if (message.isPinned()) {
+                        iterator.remove();
+                    }
                 }
-                messages.removeIf(message -> message.isPinned());
 
-                if (messages.size() < 2 && member != null) {
+                if (messages.size() < 2) {
                     try {
                         EmbedBuilder builder = new EmbedBuilder();
                         builder.setColor(0xff3923);
@@ -65,6 +54,7 @@ public class MessageAPI {
                         } else {
                             event.getChannel().sendMessage(builder.build()).queue();
                         }
+                        return;
                     } catch (InsufficientPermissionException exception) {
                     }
                 }
@@ -80,8 +70,8 @@ public class MessageAPI {
                     EmbedBuilder builder = new EmbedBuilder();
                     builder.setColor(new Color(0, 255, 0));
                     builder.setTitle("ClearChat");
-                    if (member != null) {
-                        builder.setDescription("Successfully deleted last " + limit + " messages by user " + member.getAsMention() + "!");
+                    if (user != null) {
+                        builder.setDescription("Successfully deleted last " + limit + " messages by user " + user.getAsMention() + "!");
                     } else {
                         builder.setDescription("Successfully deleted last " + limit + " messages" + "!");
                     }
