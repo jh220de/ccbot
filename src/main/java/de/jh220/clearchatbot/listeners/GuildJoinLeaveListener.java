@@ -1,7 +1,6 @@
 package de.jh220.clearchatbot.listeners;
 
 import de.jh220.clearchatbot.ClearChatBot;
-import de.jh220.clearchatbot.utils.LoadToken;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -26,7 +25,6 @@ public class GuildJoinLeaveListener extends ListenerAdapter {
 
         List<Guild> servers = ClearChatBot.getJDA().getGuilds();
         System.out.println(new Timestamp(new Date().getTime()) + ": The bot is now on " + servers.size() + " servers.");
-        ClearChatBot.token = LoadToken.getToken();
 
         TextChannel defaultChannel = event.getGuild().getDefaultChannel();
         if (defaultChannel == null) {
@@ -54,6 +52,5 @@ public class GuildJoinLeaveListener extends ListenerAdapter {
 
         List<Guild> servers = ClearChatBot.getJDA().getGuilds();
         System.out.println(new Timestamp(new Date().getTime()) + ": The bot is now on " + servers.size() + " servers.");
-        ClearChatBot.token = LoadToken.getToken();
     }
 }

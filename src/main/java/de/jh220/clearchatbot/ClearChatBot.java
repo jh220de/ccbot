@@ -55,11 +55,11 @@ public class ClearChatBot {
         loadMySQL();
 
         long time = System.currentTimeMillis() - start;
-        System.out.println(new Timestamp(new Date().getTime()) + ": Bot started! Startup process took " + time + "ms.");
+        System.out.println(new Timestamp(new Date().getTime()) + ": Bot started! Startup process took " + time + " ms.");
     }
 
     private static void loadMySQL() {
-        mySQL = new MySQL("localhost", "discord_clearchatbot", "discord", System.getenv("DISCORD_CLEARCHATBOT_MYSQL"));
+        mySQL = new MySQL("localhost", "discord_clearchatbot", "discord", System.getenv("MYSQL_DISCORD_PASSWORD"));
         mySQL.executeQuery("CREATE TABLE IF NOT EXISTS guilds(id VARCHAR(18), name VARCHAR(100)");
     }
 
