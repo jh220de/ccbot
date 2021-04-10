@@ -52,7 +52,7 @@ public class ClearChatBot {
 
         instance = builder.build();
 
-        loadMySQL();
+        //loadMySQL();
 
         long time = System.currentTimeMillis() - start;
         System.out.println(new Timestamp(new Date().getTime()) + ": Bot started! Startup process took " + time + " ms.");

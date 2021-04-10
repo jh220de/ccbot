@@ -19,12 +19,11 @@ public class GuildJoinLeaveListener extends ListenerAdapter {
     public void onGuildJoin(GuildJoinEvent event) {
         String guild = event.getGuild().getName();
         String guildId = event.getGuild().getId();
+        List<Guild> servers = ClearChatBot.getJDA().getGuilds();
 
         System.out.print(new Timestamp(new Date().getTime()) + ": [\u001B[33mINFO\u001B[0m] \"" + guild + "\" (" + guildId + ") » ");
-        System.out.println("Bot joined the server.");
-
-        List<Guild> servers = ClearChatBot.getJDA().getGuilds();
-        System.out.println(new Timestamp(new Date().getTime()) + ": The bot is now on " + servers.size() + " servers.");
+        System.out.print("Bot joined the server.");
+        System.out.println(" (Total: " + servers.size() + " servers)");
 
         TextChannel defaultChannel = event.getGuild().getDefaultChannel();
         if (defaultChannel == null) {
@@ -46,11 +45,10 @@ public class GuildJoinLeaveListener extends ListenerAdapter {
     public void onGuildLeave(GuildLeaveEvent event) {
         String guild = event.getGuild().getName();
         String guildId = event.getGuild().getId();
-
-        System.out.print(new Timestamp(new Date().getTime()) + ": \"" + guild + "\" (" + guildId + ") » ");
-        System.out.println("Bot left the server.");
-
         List<Guild> servers = ClearChatBot.getJDA().getGuilds();
-        System.out.println(new Timestamp(new Date().getTime()) + ": The bot is now on " + servers.size() + " servers.");
+
+        System.out.print(new Timestamp(new Date().getTime()) + ": [\u001B[33mINFO\u001B[0m] \"" + guild + "\" (" + guildId + ") » ");
+        System.out.print("Bot left the server.");
+        System.out.println(" (Total: " + servers.size() + " servers)");
     }
 }
