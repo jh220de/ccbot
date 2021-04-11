@@ -36,20 +36,22 @@ public class MessageAPI {
                         exception.printStackTrace();
                         return;
                     }
-                    EmbedBuilder builder = new EmbedBuilder();
-                    builder.setColor(0xff3923);
-                    builder.setTitle("Error: No permissions!");
-                    builder.setDescription("The bot needs the permission to see the channel history!");
-                    builder.addField("Permission »", exception.getPermission().getName(), false);
-                    int selfDestructionTime = ClearChatBot.getSelfDestructionTime(event.getGuild().getId());
-                    if (selfDestructionTime != -1) {
-                        event.getMessage().delete().queueAfter(selfDestructionTime, TimeUnit.SECONDS);
-                        event.getChannel().sendMessage(builder.build()).queue(message -> {
-                            message.delete().queueAfter(selfDestructionTime, TimeUnit.SECONDS);
-                        });
-                    } else {
-                        event.getChannel().sendMessage(builder.build()).queue();
-                    }
+                    try {
+                        EmbedBuilder builder = new EmbedBuilder();
+                        builder.setColor(0xff3923);
+                        builder.setTitle("Error: No permissions!");
+                        builder.setDescription("The bot needs the permission to see the channel history!");
+                        builder.addField("Permission »", exception.getPermission().getName(), false);
+                        int selfDestructionTime = ClearChatBot.getSelfDestructionTime(event.getGuild().getId());
+                        if (selfDestructionTime != -1) {
+                            event.getMessage().delete().queueAfter(selfDestructionTime, TimeUnit.SECONDS);
+                            event.getChannel().sendMessage(builder.build()).queue(message -> {
+                                message.delete().queueAfter(selfDestructionTime, TimeUnit.SECONDS);
+                            });
+                        } else {
+                            event.getChannel().sendMessage(builder.build()).queue();
+                        }
+                    } catch (InsufficientPermissionException exception2) { }
                     return;
                 }
                 OffsetDateTime offsetDateTime = OffsetDateTime.of(LocalDate.now().minusWeeks(2), LocalTime.NOON, ZoneOffset.UTC);
@@ -91,7 +93,32 @@ public class MessageAPI {
                     return;
                 }
 
-                channel.deleteMessages(messages).complete();
+                try {
+                    channel.deleteMessages(messages).complete();
+                } catch (InsufficientPermissionException exception) {
+                    if (!exception.getPermission().equals(Permission.MESSAGE_HISTORY)) {
+                        exception.printStackTrace();
+                        return;
+                    }
+                    try {
+                        EmbedBuilder builder = new EmbedBuilder();
+                        builder.setColor(0xff3923);
+                        builder.setTitle("Error: No permissions!");
+                        builder.setDescription("The bot needs the permission to manage messages!");
+                        builder.addField("Permission »", exception.getPermission().getName(), false);
+                        int selfDestructionTime = ClearChatBot.getSelfDestructionTime(event.getGuild().getId());
+                        if (selfDestructionTime != -1) {
+                            event.getMessage().delete().queueAfter(selfDestructionTime, TimeUnit.SECONDS);
+                            event.getChannel().sendMessage(builder.build()).queue(message -> {
+                                message.delete().queueAfter(selfDestructionTime, TimeUnit.SECONDS);
+                            });
+                        } else {
+                            event.getChannel().sendMessage(builder.build()).queue();
+                        }
+                    } catch (InsufficientPermissionException exception2) { }
+                    return;
+                }
+
 
                 try {
                     EmbedBuilder builder = new EmbedBuilder();

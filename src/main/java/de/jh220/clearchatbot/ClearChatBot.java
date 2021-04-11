@@ -31,7 +31,7 @@ public class ClearChatBot {
     private static List<DefaultCommand> commands;
 
     public static void main(String[] args) throws LoginException {
-        System.out.println(new Timestamp(new Date().getTime()) + ": Starting bot...");
+        System.out.println("Starting bot...");
         long start = System.currentTimeMillis();
 
         token = LoadToken.getToken(); // Just provide your token here
@@ -52,10 +52,10 @@ public class ClearChatBot {
 
         instance = builder.build();
 
-        //loadMySQL();
+        loadMySQL();
 
         long time = System.currentTimeMillis() - start;
-        System.out.println(new Timestamp(new Date().getTime()) + ": Bot started! Startup process took " + time + " ms.");
+        System.out.println("Bot started! Startup process took " + time + " ms.");
     }
 
     private static void loadMySQL() {

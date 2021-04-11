@@ -21,7 +21,7 @@ public class GuildJoinLeaveListener extends ListenerAdapter {
         String guildId = event.getGuild().getId();
         List<Guild> servers = ClearChatBot.getJDA().getGuilds();
 
-        System.out.print(new Timestamp(new Date().getTime()) + ": [\u001B[33mINFO\u001B[0m] \"" + guild + "\" (" + guildId + ") » ");
+        System.out.print(guild + " (" + guildId + ") » ");
         System.out.print("Bot joined the server.");
         System.out.println(" (Total: " + servers.size() + " servers)");
 
@@ -47,7 +47,7 @@ public class GuildJoinLeaveListener extends ListenerAdapter {
         String guildId = event.getGuild().getId();
         List<Guild> servers = ClearChatBot.getJDA().getGuilds();
 
-        System.out.print(new Timestamp(new Date().getTime()) + ": [\u001B[33mINFO\u001B[0m] \"" + guild + "\" (" + guildId + ") » ");
+        System.out.print(guild + " (" + guildId + ") » ");
         System.out.print("Bot left the server.");
         System.out.println(" (Total: " + servers.size() + " servers)");
     }

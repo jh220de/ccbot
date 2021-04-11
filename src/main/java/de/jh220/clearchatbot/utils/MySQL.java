@@ -22,7 +22,7 @@ public class MySQL {
     }
 
     public void connect() {
-        System.out.println(new Timestamp(new Date().getTime()) + ": Versuche Verbindung mit MySQL herzustellen...");
+        System.out.println("Trying to connect to MySQL...");
         try {
             connection = DriverManager.getConnection("jdbc:mysql://" + HOST + ":3306/" + DATABASE + "?autoReconnect=true", USER, PASSWORD);
             System.out.println(new Timestamp(new Date().getTime()) + ": MySQL connection was successfully established.");
@@ -36,10 +36,10 @@ public class MySQL {
         try {
             if (connection != null) {
                 connection.close();
-                System.out.println(new Timestamp(new Date().getTime()) + ": MySQL Verbindung wurde erfolgreich hergestellt.");
+                System.out.println("MySQL connection was successfully closed.");
             }
         } catch (SQLException exception) {
-            System.out.println(new Timestamp(new Date().getTime()) + ": MySQL Verbindung konnte nicht beendet werden!");
+            System.out.println("MySQL connection could not be closed!");
             exception.printStackTrace();
         }
     }
