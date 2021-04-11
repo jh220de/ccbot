@@ -60,7 +60,7 @@ public class ClearChatBot {
 
     private static void loadMySQL() {
         mySQL = new MySQL("localhost", "discord_clearchatbot", "discord", System.getenv("MYSQL_DISCORD_PASSWORD"));
-        mySQL.executeQuery("CREATE TABLE IF NOT EXISTS guilds(id VARCHAR(18), name VARCHAR(100)");
+        mySQL.executeQuery("CREATE TABLE IF NOT EXISTS guilds(id VARCHAR(18), name VARCHAR(100))");
     }
 
     public static JDA getJDA() {
