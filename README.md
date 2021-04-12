@@ -2,6 +2,9 @@
 
 ## Description
 
+Discord Verification Process pending.
+
+
 ### Introduction
 
 At first glance a simple **ClearChat** bot you dont need, but at second glance a useful tool for moderating the deletion
@@ -27,7 +30,21 @@ Vote for us now at [top.gg](https://top.gg/bot/787789079227006976
 
 ### Known Issues
 
-Nothing.
+```
+net.dv8tion.jda.api.exceptions.InsufficientPermissionException: Must have MESSAGE_MANAGE in order to bulk delete messages in this channel regardless of author.
+        at net.dv8tion.jda.internal.entities.AbstractChannelImpl.checkPermission(AbstractChannelImpl.java:320)
+        at net.dv8tion.jda.internal.entities.TextChannelImpl.deleteMessagesByIds(TextChannelImpl.java:150)
+        at net.dv8tion.jda.internal.entities.TextChannelImpl.deleteMessages(TextChannelImpl.java:141)
+        at de.jh220.clearchatbot.utils.MessageAPI.lambda$deleteMessages$4(MessageAPI.java:97)
+        at java.lang.Thread.run(Thread.java:748)
+```
+```
+Exception in thread "Thread-31" java.lang.IllegalArgumentException: Must provide at least 2 or at most 100 messages to be deleted.
+        at net.dv8tion.jda.internal.entities.TextChannelImpl.deleteMessagesByIds(TextChannelImpl.java:152)
+        at net.dv8tion.jda.internal.entities.TextChannelImpl.deleteMessages(TextChannelImpl.java:141)
+        at de.jh220.clearchatbot.utils.MessageAPI.lambda$deleteMessages$4(MessageAPI.java:97)
+        at java.lang.Thread.run(Thread.java:748)
+```
 
 ### Report
 
