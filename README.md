@@ -24,7 +24,7 @@ Invite this bot [to your server now](https://www.jh220.de/ccbot/) and enjoy a wo
 
 ## Vote
 
-Vote for us now at [top.gg](https://top.gg/bot/787789079227006976
+Vote for us now at [top.gg](https://top.gg/bot/787789079227006976)
 
 ## Issues
 
