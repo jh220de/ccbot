@@ -15,6 +15,5 @@ We are glad about any support.
 https://www.jh220.de/ccbot
             `);
         message.reply(embed);
-        member.reply("yeet");
     },
 };
