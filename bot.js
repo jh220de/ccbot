@@ -40,14 +40,15 @@ client.on('message', message => {
 	}
 });
 
+client.on('guildCreate', setActivity);
+client.on('guildDelete', setActivity);
+
 function setActivity() {
     client.user.setActivity(`cc help | ${client.guilds.cache.size} servers`, {type: 'WATCHING'});
 };
 
 client.once('ready', () => {
     setActivity();
-    setInterval(setActivity, 60000);
-
     const time = new Date().getMilliseconds();
     console.log(`Bot started! Startup process took ${time}ms.`);
 });
