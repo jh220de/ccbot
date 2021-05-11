@@ -36,7 +36,8 @@ client.on('message', message => {
 		command.execute(message, args);
 	} catch (error) {
         console.error(error);
-		message.reply("there was an error trying to execute that command!");
+		message.reply(`there was an error trying to execute that command!
+Please report it at https://github.com/jh220/discord-clearchatbot/issues :heart:`);
 	}
 });
 
