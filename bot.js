@@ -41,15 +41,27 @@ Please report it at https://github.com/jh220/discord-clearchatbot/issues :heart:
 	}
 });
 
-client.on('guildCreate', setActivity);
-client.on('guildDelete', setActivity);
-
+var boolswitch = false;
 function setActivity() {
-    client.user.setActivity(`cc help | ${client.guilds.cache.size} servers`, {type: 'WATCHING'});
-};
+    var display;
+    if(boolswitch) {
+        var users = 0;
+        client.guilds.cache.each(guild => users += guild.memberCount);
+
+        display = `${users} users`;
+        boolswitch = false;
+    } else {
+        display = `${client.guilds.cache.size} servers`;
+        boolswitch = true;
+    }
+
+    client.user.setActivity(`cc help | ${display}`, {type: 'WATCHING'});
+}
 
 client.once('ready', () => {
-    setActivity();
+    setActivity;
+    setInterval(setActivity, 15000);
+
     const time = new Date().getMilliseconds();
     console.log(`Bot started! Startup process took ${time}ms.`);
 });
