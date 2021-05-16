@@ -43,19 +43,19 @@ Please report it at https://github.com/jh220/discord-clearchatbot/issues :heart:
 
 var boolswitch = false;
 function setActivity() {
+    var number = 0;
     var display;
-    if(boolswitch) {
-        var users = 0;
-        client.guilds.cache.each(guild => users += guild.memberCount);
 
-        display = `${users} users`;
-        boolswitch = false;
+    if(boolswitch) {
+        client.guilds.cache.each(guild => number += guild.memberCount);
+        display = "users";
     } else {
-        display = `${client.guilds.cache.size} servers`;
-        boolswitch = true;
+        number = client.guilds.cache.size;
+        display = "servers";
     }
 
-    client.user.setActivity(`cc help | ${display}`, {type: 'WATCHING'});
+    number = number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    client.user.setActivity(`cc help | ${number} ${display}`, {type: 'WATCHING'});
 }
 
 client.once('ready', () => {
