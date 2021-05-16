@@ -54,6 +54,7 @@ function setActivity() {
         display = "servers";
     }
 
+    boolswitch = !boolswitch;
     number = number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
     client.user.setActivity(`cc help | ${number} ${display}`, {type: 'WATCHING'});
 }
