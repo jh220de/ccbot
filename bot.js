@@ -53,7 +53,7 @@ function setActivity() {
     } else if(count == 3) {
         var members = 0; client.guilds.cache.each(guild => members += guild.memberCount);
         members = members.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-        display = `${members.length} users`;
+        display = `${members} users`;
     } else if(count == 4) count = 0;
 
     count++;
