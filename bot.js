@@ -26,7 +26,7 @@ client.on('message', message => {
     if(!command) return;
 
     if(command.permissions) {
-        const authorPerms = message.channel.permissionsFor(message.author);
+        const authorPerms = message.channel.permissionsFor(message.member);
         if (!authorPerms || !authorPerms.has(command.permissions)) {
             return message.reply("you do not have enough permissions to run this command. ");
         }
@@ -41,22 +41,23 @@ Please report it at https://github.com/jh220/discord-clearchatbot/issues :heart:
 	}
 });
 
-var boolswitch = false;
+var count = 1;
+
 function setActivity() {
-    var number = 0;
-    var display;
+    var display = "jh220.de/dc";
 
-    if(boolswitch) {
-        client.guilds.cache.each(guild => number += guild.memberCount);
-        display = "users";
-    } else {
-        number = client.guilds.cache.size;
-        display = "servers";
-    }
+    if(count == 1 || count == 2) {
+        var servers = client.guilds.cache.size;
+        servers = servers.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        display = `${servers} servers`;
+    } else if(count == 3) {
+        var members = 0; client.guilds.cache.each(guild => members += guild.memberCount);
+        members = members.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        display = `${members.length} users`;
+    } else if(count == 4) count = 0;
 
-    boolswitch = !boolswitch;
-    number = number.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-    client.user.setActivity(`cc help | ${number} ${display}`, {type: 'WATCHING'});
+    count++;
+    client.user.setActivity(`cc help | ${display}`, {type: 'WATCHING'});
 }
 
 client.once('ready', () => {
