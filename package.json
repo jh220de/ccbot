@@ -4,6 +4,7 @@
   "description": "Get back control of your Discord server now and use the useful features of ClearChat bot!",
   "main": "src/bot.js",
   "scripts": {
+    "prod": "node --unhandled_rejections=none .",
     "dev": "nodemon"
   },
   "author": "JH220",
