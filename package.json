@@ -2,13 +2,16 @@
   "name": "clearchat",
   "version": "1.0.0",
   "description": "Get back control of your Discord server now and use the useful features of ClearChat bot!",
-  "main": "./bot.js",
+  "main": "src/bot.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon"
   },
   "author": "JH220",
   "license": "ISC",
   "dependencies": {
     "discord.js": "^12.5.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
   }
 }
