@@ -26,9 +26,10 @@ client.on('message', message => {
     if(!command) return;
 
     if(command.permissions) {
+        if(message.channel.type != 'text') return message.reply("this command can not be executed in DM's.");
         const authorPerms = message.channel.permissionsFor(message.member);
         if (!authorPerms || !authorPerms.has(command.permissions)) {
-            return message.reply("you do not have enough permissions to run this command. ");
+            return message.reply("you do not have enough permissions to run this command.");
         }
     }
 
