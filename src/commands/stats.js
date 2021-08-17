@@ -1,25 +1,33 @@
-const Discord = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
-    name: 'stats',
-    description: "Sends the bot's stats. :gear:",
-    usage: 'stats',
-    execute(message, args) {
-        var users = 0;
-        message.client.guilds.cache.each(guild => users += guild.memberCount);
-        users = users.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+    data: new SlashCommandBuilder()
+        .setName('stats')
+        .setDescription("Sends the bot's stats. ⚙️"),
+    async execute(interaction) {
+        const promises = [
+            interaction.client.shard.fetchClientValues('guilds.cache.size'),
+            interaction.client.shard.broadcastEval(c => c.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0)),
+        ];
 
-        var servers = message.client.guilds.cache.size;
-        servers = servers.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        return Promise.all(promises)
+            .then(results => {
+                const servers = results[0].reduce((acc, guildCount) => acc + guildCount, 0)
+                    .toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                const members = results[1].reduce((acc, memberCount) => acc + memberCount, 0)
+                    .toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 
-        var embed = new Discord.MessageEmbed()
-            .setColor('00FFFF')
-            .setTitle("ClearChat-Bot Stats")
-            .setDescription(`
+                const embed = new MessageEmbed()
+                    .setColor('00FFFF')
+                    .setTitle("ClearChat-Bot Stats")
+                    .setDescription(`
 **Servers:** ${servers}
-**Users:** ${users}
-**Ping:** ${Math.round(message.client.ws.ping)}ms
-            `);
-        message.reply(embed);
+**Users:** ${members}
+**Ping:** ${Math.round(interaction.client.ws.ping)}ms
+**Shard:** ${interaction.guild.shardID}
+                    `);
+                    return interaction.reply({ embeds: [embed], ephemeral: true });
+            });
     },
 };

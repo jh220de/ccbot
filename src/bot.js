@@ -1,73 +1,87 @@
-console.log("Starting bot...");
 const start = new Date().getMilliseconds();
 
 const fs = require('fs');
-const Discord = require('discord.js');
-const { prefix, token } = require('../config.json');
+const { Client, Collection, Intents } = require('discord.js');
+const { Routes } = require('discord-api-types/v9');
+const { REST } = require('@discordjs/rest');
+const { token } = require('../config.json');
 
-const client = new Discord.Client();
-client.commands = new Discord.Collection();
+const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+var shardId;
+
+client.commands = new Collection();
+const commands = [];
 
 const commandFiles = fs.readdirSync('./src/commands').filter(file => file.endsWith('.js'));
-
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
-	client.commands.set(command.name, command);
+	client.commands.set(command.data.name, command);
+    commands.push(command.data.toJSON());
 }
 
-client.on('message', message => {
-    if(!message.content.startsWith(prefix) || message.author.bot) return;
-
-    const args = message.content.slice(prefix.length).trim().split(/ +/);
-	const commandName = args.shift().toLowerCase();
-
-    const command = client.commands.get(commandName);
-
-    if(!command) return;
-
-    if(command.permissions) {
-        if(message.channel.type != 'text') return message.reply("this command can not be executed in DM's.");
-        const authorPerms = message.channel.permissionsFor(message.member);
-        if (!authorPerms || !authorPerms.has(command.permissions)) {
-            return message.reply("you do not have enough permissions to run this command.");
-        }
-    }
+client.on('interactionCreate', async interaction => {
+    if(!interaction.isCommand()) return;
+    const { commandName } = interaction;
+    if(!client.commands.has(commandName)) return;
 
     try {
-		command.execute(message, args);
-	} catch (error) {
-        console.error(error);
-		message.reply(`there was an error trying to execute that command!
-Please report it at https://github.com/jh220/discord-clearchatbot/issues :heart:`);
+        await client.commands.get(commandName).execute(interaction);
+    } catch (error) {
+        await interaction.reply({ content: "Please make sure that the bot has enough permissions in your channel.", ephemeral: true });
 	}
 });
 
-var count = 1;
+process.on('message', message => {
+    if(message.type == 'shardId') shardId = message.data.shardId;
+});
 
-function setActivity() {
-    var display = "jh220.de/dc";
+const rest = new REST({ version: '9' }).setToken(token);
+async function loadCommands() {
+    try {
+        console.log("Refreshing commands...");
+
+        await rest.put(
+            Routes.applicationCommands(client.user.id),
+            { body: commands },
+        );
+
+        console.log("Refreshed commands.");
+
+        const time = new Date().getMilliseconds();
+        console.log(`Shard ${shardId} started! Startup process took ${time - start}ms.`);
+    } catch(errror) {
+        console.error(error);
+    }
+}
+
+var count = 1;
+async function setActivity() {
+    var display = "jh220.de/ccbot";
 
     if(count == 1 || count == 2) {
-        var servers = client.guilds.cache.size;
+        var servers;
+        await client.shard.fetchClientValues('guilds.cache.size')
+            .then(results => servers = results.reduce((acc, guildCount) => acc + guildCount, 0));
         servers = servers.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         display = `${servers} servers`;
     } else if(count == 3) {
-        var members = 0; client.guilds.cache.each(guild => members += guild.memberCount);
+        var members;
+        await client.shard.broadcastEval(c => c.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0))
+            .then(results => members = results.reduce((acc, memberCount) => acc + memberCount, 0))
         members = members.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         display = `${members} users`;
-    } else if(count == 4) count = 0;
+    } else count = 0;
 
     count++;
-    client.user.setActivity(`cc help | ${display}`, {type: 'WATCHING'});
+    client.user.setActivity(`/clear | ${display}`, { type: 'WATCHING' });
 }
 
-client.once('ready', () => {
-    setActivity;
+client.on('ready', () => {
+    setActivity();
     setInterval(setActivity, 15000);
-
-    const time = new Date().getMilliseconds();
-    console.log(`Bot started! Startup process took ${time}ms.`);
+    
+    loadCommands();
 });
-client.once('disconnect', () => console.log("Bot stopped!"));
+client.once('disconnect', () => console.log(`Shard ${shardId} stopped!`));
 
 client.login(token);

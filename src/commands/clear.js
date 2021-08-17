@@ -1,36 +1,31 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-    name: 'clear',
-    description: "Clears :recycle: the message history by a specified amount of messages",
-    usage: 'clear [Amount] [User]',
-    permissions: 'MANAGE_MESSAGES',
-    execute(message, args) {
-        if(args.length < 0 || args.length > 2) return message.reply("please use: " + this.usage);
+    data: new SlashCommandBuilder()
+        .setName('clear')
+        .setDescription("Clears ♻️ the message history by a specified amount of messages")
+        .addIntegerOption(option => option.setName('amount').setDescription("Number of messages to clear"))
+        .addUserOption(option => option.setName('target').setDescription("Clear messages only from a specific user")),
+    async execute(interaction) {
+        if(!interaction.channel.permissionsFor(interaction.member).has("MANAGE_MESSAGES"))
+            return interaction.reply({ content: "You do not have enough permissions to do this.", ephemeral: true });
 
-        var amount = 100;
-        var user = null;
+        var amount = interaction.options.getInteger('amount');
+        if(!amount) amount = 100;
+        const user = interaction.options.getUser('target');
 
-        if(args.length == 1) {
-            if(!message.mentions.users.size) amount = parseInt(args[0]) + 1;
-            else user = message.mentions.users.first();
-        } else if(args.length == 2) {
-            amount = parseInt(args[0]) + 1;
-            if(!message.mentions.users.size) return message.reply("you need to tag a valid user.");
-            user = message.mentions.users.first();
-        }
-        
-        if(isNaN(amount)) return message.reply("please enter a valid number.");
-        if(amount <= 1 || amount > 100) return message.reply("you need to input a number between 1 and 99.");
+        if(amount < 1 || amount > 100) return interaction.reply({ content: "You need to input a number between 1 and 100.", ephemeral: true });
 
-        message.channel.messages.fetch({ limit: amount })
-            .then(fetchMessages => {
+        try {
+            await interaction.channel.messages.fetch({ limit: amount }).then(fetchMessages => {
                 var messages = fetchMessages.filter(message => !message.pinned);
                 if(user) messages = messages.filter(message => message.author.id == user.id);
-
-                return message.channel.bulkDelete(messages, true);
-            }).then(prunedMessages => {
-                const count = `${prunedMessages.size} message${prunedMessages.size != 1 ? 's' : ''}`;
-                const byUser = user ? ` from ${user}` : '';
-                message.channel.send(`${message.author} deleted ${count} in this channel${byUser}.`);
-            });
+                interaction.channel.bulkDelete(messages, true).then(messages => {
+                    return interaction.reply(`Deleted ${messages.size} message${messages.size != 1 ? 's' : ''} in this channel${user ? ` from ${user}` : ''}.`);
+                });
+            });   
+        } catch(error) {
+            return interaction.reply({ content: "The bot has insufficient permissions in this channel.", ephemeral: true });
+        } 
     },
 };

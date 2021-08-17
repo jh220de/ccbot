@@ -2,15 +2,18 @@
   "name": "clearchat",
   "version": "1.0.0",
   "description": "Get back control of your Discord server now and use the useful features of ClearChat bot!",
-  "main": "src/bot.js",
+  "main": "src/index.js",
   "scripts": {
-    "prod": "node --unhandled_rejections=none .",
+    "prod": "node .",
     "dev": "nodemon"
   },
   "author": "JH220",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^12.5.3"
+    "@discordjs/builders": "^0.5.0",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "discord-api-types": "^0.22.0",
+    "discord.js": "^13.1.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"

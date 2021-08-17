@@ -1,11 +1,12 @@
-const Discord = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
-    name: 'invite',
-    description: "Sends the bot's invite link to put it on your own server. :sparkles:",
-    usage: 'invite',
-    execute(message, args) {
-        var embed = new Discord.MessageEmbed()
+    data: new SlashCommandBuilder()
+        .setName('invite')
+        .setDescription("Sends the bot's invite link to put it on your own server. ✨"),
+    async execute(interaction) {
+        const embed = new MessageEmbed()
             .setColor('00FFFF')
             .setTitle("ClearChat-Bot Invite")
             .setDescription(`
@@ -14,6 +15,6 @@ We are glad about any support.
 
 https://www.jh220.de/ccbot
             `);
-        message.reply(embed);
+        return interaction.reply({ embeds: [embed], ephemeral: true });
     },
 };
