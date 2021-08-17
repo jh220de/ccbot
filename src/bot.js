@@ -9,6 +9,7 @@ const { token } = require('../config.json');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
 var shardId;
+var count = 0;
 
 client.commands = new Collection();
 const commands = [];
@@ -27,7 +28,8 @@ client.on('interactionCreate', async interaction => {
 
     try {
         await client.commands.get(commandName).execute(interaction);
-        console.log(moment().format('DD.MM.YYYY HH:mm:ss'));
+        count++;
+        console.log(`${count.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")} ${moment().format('DD.MM.YYYY HH:mm:ss')}`);
     } catch (error) {
         await interaction.reply({ content: "Please make sure that the bot has enough permissions in your channel.", ephemeral: true });
 	}
@@ -49,7 +51,8 @@ async function loadCommands() {
 
         console.log("Refreshed commands.");
 
-        console.log(`Shard ${shardId} started! Startup process took ${Date.now() - start}ms.`);
+        const time = (Date.now() - start).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        console.log(`Shard ${shardId} started! Startup process took ${time}ms.`);
     } catch(errror) {
         console.error(error);
     }
