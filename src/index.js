@@ -3,7 +3,7 @@ const { token } = require('../config.json');
 const { ShardingManager } = require('discord.js');
 
 const manager = new ShardingManager('./src/bot.js', {
-    //execArgv: ['--unhandled_rejections=none'],
+    execArgv: ['--unhandled_rejections=none'],
     token: token,
 });
 
@@ -14,4 +14,4 @@ manager.on('shardCreate', shard => {
     });
 });
 
-manager.spawn(3);
+manager.spawn();

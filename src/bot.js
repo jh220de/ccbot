@@ -1,6 +1,7 @@
-const start = new Date().getMilliseconds();
+const start = Date.now();
 
 const fs = require('fs');
+const moment = require('moment');
 const { Client, Collection, Intents } = require('discord.js');
 const { Routes } = require('discord-api-types/v9');
 const { REST } = require('@discordjs/rest');
@@ -26,6 +27,7 @@ client.on('interactionCreate', async interaction => {
 
     try {
         await client.commands.get(commandName).execute(interaction);
+        console.log(moment().format('DD.MM.YYYY HH:mm:ss'));
     } catch (error) {
         await interaction.reply({ content: "Please make sure that the bot has enough permissions in your channel.", ephemeral: true });
 	}
@@ -47,8 +49,7 @@ async function loadCommands() {
 
         console.log("Refreshed commands.");
 
-        const time = new Date().getMilliseconds();
-        console.log(`Shard ${shardId} started! Startup process took ${time - start}ms.`);
+        console.log(`Shard ${shardId} started! Startup process took ${Date.now() - start}ms.`);
     } catch(errror) {
         console.error(error);
     }
