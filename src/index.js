@@ -14,4 +14,4 @@ manager.on('shardCreate', shard => {
     });
 });
 
-manager.spawn();
+manager.spawn(3);
