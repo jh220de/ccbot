@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
+const { shardId } = require('../bot');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -25,7 +26,10 @@ module.exports = {
 **Servers:** ${servers}
 **Users:** ${members}
 **Ping:** ${Math.round(interaction.client.ws.ping)}ms
-**Shard:** ${interaction.guild.shardID}
+**Shard:** ${shardId}
+
+If you want to invite this bot to your server, you can do it via the following link: http://jh220.de/ccbot
+*Note:* If you need help with the bot, please visit our Discord: http://jh220.de/cc/help
                     `);
                     return interaction.reply({ embeds: [embed], ephemeral: true });
             });

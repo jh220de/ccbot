@@ -89,3 +89,5 @@ client.on('ready', () => {
 client.once('disconnect', () => console.log(`Shard ${shardId} stopped!`));
 
 client.login(token);
+
+module.exports(shardId);
