@@ -1,5 +1,5 @@
 # ClearChatBot 
-[![Discord Bots](https://top.gg/api/widget/787789079227006976.svg)(https://top.gg/bot/787789079227006976)
+![TopGG](https://top.gg/api/widget/787789079227006976.svg)
 
 ## Overview
 
