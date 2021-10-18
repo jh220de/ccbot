@@ -2,10 +2,7 @@ const { token } = require('../config.json');
 
 const { ShardingManager } = require('discord.js');
 
-const manager = new ShardingManager('./src/bot.js', {
-    execArgv: ['--unhandled_rejections=none'],
-    token: token,
-});
+const manager = new ShardingManager('./src/bot.js', { token: token });
 
 manager.on('shardCreate', shard => {
     const start = Date.now();
