@@ -12,6 +12,9 @@ module.exports = {
             .setDescription(`
 [Here's an invite link so you too can get this bot on your server!](https://discord.com/oauth2/authorize?client_id=787789079227006976&permissions=484416&redirect_uri=https%3A%2F%2Fwww.jh220.de&scope=bot%20applications.commands)
 We are glad about any support.
+
+Statistics on the number of servers and users can be found via "/stats".
+*Note:* If you need help with the bot, please visit our Discord: http://jh220.de/cc/help
             `);
         return interaction.reply({ embeds: [embed], ephemeral: true });
     },
