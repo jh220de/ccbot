@@ -49,8 +49,7 @@ async function setActivity() {
 }
 
 client.on('ready', () => {
-    setActivity();
-    setInterval(setActivity, 15000);
+    setInterval(setActivity, 30000);
 });
 
 client.login(token);
