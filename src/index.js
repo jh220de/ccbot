@@ -8,9 +8,11 @@ const manager = new ShardingManager('./src/bot.js', {
 });
 
 manager.on('shardCreate', shard => {
+    const start = Date.now();
     console.log(`Starting shard ${shard.id}...`);
     shard.on('ready', () => {
-        shard.send({ type: "shardId", data: { shardId: shard.id } });
+        const time = (Date.now() - start).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+        console.log(`Shard ${shard.id} started! Startup process took ${time}ms.`);
     });
 });
 

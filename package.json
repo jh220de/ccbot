@@ -5,7 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "prod": "node .",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "refresh": "node src/refresh.js"
   },
   "author": "JH220",
   "license": "ISC",

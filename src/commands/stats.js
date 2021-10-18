@@ -1,6 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
-const { shardId } = require('../bot');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -18,7 +17,7 @@ module.exports = {
                     .toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
                 const members = results[1].reduce((acc, memberCount) => acc + memberCount, 0)
                     .toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-
+                
                 const embed = new MessageEmbed()
                     .setColor('00FFFF')
                     .setTitle("ClearChat-Bot Stats")
@@ -26,7 +25,7 @@ module.exports = {
 **Servers:** ${servers}
 **Users:** ${members}
 **Ping:** ${Math.round(interaction.client.ws.ping)}ms
-**Shard:** ${shardId}
+**Shard:** ${interaction.guild.shardId}
 
 If you want to invite this bot to your server, you can do it via the following link: http://jh220.de/ccbot
 *Note:* If you need help with the bot, please visit our Discord: http://jh220.de/cc/help
