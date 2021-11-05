@@ -4,7 +4,7 @@ const { MessageEmbed } = require('discord.js');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('stats')
-        .setDescription("Sends the bot's stats. ⚙️"),
+        .setDescription("Sends the bot's stats. 📈"),
     async execute(interaction) {
         const promises = [
             interaction.client.shard.fetchClientValues('guilds.cache.size'),
@@ -13,17 +13,15 @@ module.exports = {
 
         return Promise.all(promises)
             .then(results => {
-                const servers = results[0].reduce((acc, guildCount) => acc + guildCount, 0)
-                    .toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-                const members = results[1].reduce((acc, memberCount) => acc + memberCount, 0)
-                    .toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+                const servers = results[0].reduce((acc, guildCount) => acc + guildCount, 0);
+                const members = results[1].reduce((acc, memberCount) => acc + memberCount, 0);
                 
                 const embed = new MessageEmbed()
                     .setColor('00FFFF')
                     .setTitle("ClearChat-Bot Stats")
                     .setDescription(`
-**Servers:** ${servers}
-**Users:** ${members}
+**Servers:** ${servers.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}
+**Members:** ${(members-servers).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}
 **Ping:** ${Math.round(interaction.client.ws.ping)}ms
 **Shard:** ${interaction.guild.shardId}
 

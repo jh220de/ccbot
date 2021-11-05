@@ -21,6 +21,7 @@ module.exports = {
                 var messages = fetchMessages.filter(message => !message.pinned);
                 if(user) messages = messages.filter(message => message.author.id == user.id);
                 interaction.channel.bulkDelete(messages, true).then(messages => {
+                    // TODO: No reply setting
                     return interaction.reply(`Deleted ${messages.size} message${messages.size != 1 ? 's' : ''} in this channel${user ? ` from ${user}` : ''}.`);
                 });
             });   
