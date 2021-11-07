@@ -23,8 +23,7 @@ module.exports = {
 **Servers:** ${servers.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}
 **Members:** ${(members-servers).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}
 **Ping:** ${Math.round(interaction.client.ws.ping)}ms
-**Shard:** ${interaction.guild.shardId}
-
+${interaction.guild != null ? `**Shard:** ${interaction.guild.shardId}\n` : ''}
 If you want to invite this bot to your server, you can do it via the following link: http://jh220.de/ccbot
 *Note:* If you need help with the bot, please visit our Discord: http://jh220.de/cc/help
                     `);
