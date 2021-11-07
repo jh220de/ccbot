@@ -61,6 +61,10 @@ client.on('ready', () => {
     setInterval(setActivity, 30000);
 
     //connection.execute('CREATE TABLE IF NOT EXISTS `settings_reply` (serverId VARCHAR(18), showreply TINYINT(1))');
+
+    setTimeout(() => {
+        client.ws.connection.triggerReady();
+    }, 30000);
 });
 
 client.login(token);
