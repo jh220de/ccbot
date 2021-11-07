@@ -2,7 +2,12 @@ const { token } = require('../config.json');
 
 const { ShardingManager } = require('discord.js');
 
-const manager = new ShardingManager('./src/bot.js', { token: token });
+const manager = new ShardingManager('./src/bot.js', {
+    totalShards: 'auto',
+    token: token,
+    spawnTimeout: -1,
+    respawn: true
+});
 
 manager.on('shardCreate', shard => {
     const start = Date.now();
@@ -13,4 +18,4 @@ manager.on('shardCreate', shard => {
     });
 });
 
-manager.spawn();
+manager.spawn(manager.totalShards, 5500, -1).catch(console.error);
