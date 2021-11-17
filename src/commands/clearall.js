@@ -10,11 +10,7 @@ module.exports = {
         if (!interaction.channel.permissionsFor(interaction.member).has('MANAGE_CHANNELS'))
             return interaction.reply({ content: "You do not have enough permissions to do this.", ephemeral: true });
 
-        try {
-            interaction.channel.clone();
-            interaction.channel.delete();
-        } catch (error) {
-            return interaction.reply({ content: "The bot has insufficient permissions to manage channels.", ephemeral: true });
-        }
+            interaction.channel.clone().catch(error => interaction.reply({ content: "The bot has insufficient permissions to manage channels.", ephemeral: true }));
+            interaction.channel.delete().catch(error => interaction.reply({ content: "The bot has insufficient permissions to manage channels.", ephemeral: true }));
     },
 };

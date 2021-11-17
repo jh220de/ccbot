@@ -18,17 +18,13 @@ module.exports = {
 
         if (amount < 1 || amount > 100) return interaction.reply({ content: "You need to input a number between 1 and 100.", ephemeral: true });
 
-        try {
-            await interaction.channel.messages.fetch({ limit: amount }).then(fetchMessages => {
-                var messages = fetchMessages.filter(message => !message.pinned);
-                if (user) messages = messages.filter(message => message.author.id == user.id);
-                interaction.channel.bulkDelete(messages, true).then(messages => {
-                    // TODO: No reply setting
-                    return interaction.reply(`Deleted ${messages.size} message${messages.size != 1 ? 's' : ''} in this channel${user ? ` from ${user}` : ''}.`);
-                });
+        await interaction.channel.messages.fetch({ limit: amount }).then(fetchMessages => {
+            var messages = fetchMessages.filter(message => !message.pinned);
+            if (user) messages = messages.filter(message => message.author.id == user.id);
+            interaction.channel.bulkDelete(messages, true).then(messages => {
+                // TODO: No reply setting
+                return interaction.reply(`Deleted ${messages.size} message${messages.size != 1 ? 's' : ''} in this channel${user ? ` from ${user}` : ''}.`);
             });
-        } catch (error) {
-            return interaction.reply({ content: "The bot has insufficient permissions in this channel.", ephemeral: true });
-        }
+        }).catch(interaction.reply({ content: "The bot has insufficient permissions in this channel.", ephemeral: true }));
     },
 };
