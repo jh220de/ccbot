@@ -25,6 +25,6 @@ module.exports = {
                 // TODO: No reply setting
                 return interaction.reply(`Deleted ${messages.size} message${messages.size != 1 ? 's' : ''} in this channel${user ? ` from ${user}` : ''}.`);
             });
-        }).catch(interaction.reply({ content: "The bot has insufficient permissions in this channel.", ephemeral: true }));
+        })/*.catch(interaction.reply({ content: "The bot has insufficient permissions in this channel.", ephemeral: true }))*/;
     },
 };
