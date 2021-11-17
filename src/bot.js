@@ -28,7 +28,7 @@ client.on('interactionCreate', async interaction => {
     try {
         await client.commands.get(commandName).execute(interaction);
     } catch (error) {
-        await interaction.reply({ content: "Please make sure that the bot has enough permissions in your channel.", ephemeral: true });
+        //await interaction.reply({ content: "Please make sure that the bot has enough permissions in your channel.", ephemeral: true });
     }
 });
 
