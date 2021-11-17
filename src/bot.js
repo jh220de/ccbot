@@ -6,13 +6,13 @@ const { Client, Collection, Intents } = require('discord.js');
 const { token, sql } = require('../config.json');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
-/*const connection = mysql.createConnection({
+const connection = mysql.createConnection({
     host: sql.host,
     port: sql.port,
     database: sql.database,
     user: sql.user,
     password: sql.password
-});*/
+});
 client.commands = new Collection();
 const commandFiles = fs.readdirSync('./src/commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
@@ -60,9 +60,9 @@ async function setActivity() {
 client.on('ready', () => {
     setInterval(setActivity, 30000);
 
-    //connection.execute('CREATE TABLE IF NOT EXISTS `settings_reply` (serverId VARCHAR(18), showreply TINYINT(1))');
+    connection.execute('CREATE TABLE IF NOT EXISTS `settings_reply` (serverId VARCHAR(18), showreply TINYINT(1))');
 });
 
 client.login(token);
 
-//module.exports = { connection };
+module.exports = { connection };
