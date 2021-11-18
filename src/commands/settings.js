@@ -14,14 +14,16 @@ module.exports = {
         if (!interaction.channel.permissionsFor(interaction.member).has('ADMINISTRATOR'))
             return interaction.reply({ content: "You do not have enough permissions to do this.", ephemeral: true });
 
-        const { connection } = require('../bot');
+        const connection = require('../bot');
 
         switch (interaction.options.getSubcommand()) {
             case "reply":
                 const showreply = interaction.options.getBoolean('showreply');
+                console.log(connection);
+                console.log(interaction.guild.id);
                 const [rows, fields] = connection.execute(
                     'SELECT * FROM `settings_reply` WHERE `serverId` = ?',
-                    [interaction.serverId]
+                    [interaction.guild.id]
                 );
                 console.log(rows);
                 console.log(fields);
