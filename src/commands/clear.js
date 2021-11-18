@@ -24,7 +24,7 @@ module.exports = {
             interaction.channel.bulkDelete(messages, true).then(messages => {
                 // TODO: No reply setting
                 return interaction.reply(`Deleted ${messages.size} message${messages.size != 1 ? 's' : ''} in this channel${user ? ` from ${user}` : ''}.`);
-            });
-        })/*.catch(interaction.reply({ content: "The bot has insufficient permissions in this channel.", ephemeral: true }))*/;
+            }).catch(error => interaction.reply({ content: "The bot has insufficient permissions to delete messages.", ephemeral: true }));
+        }).catch(error => interaction.reply({ content: "The bot has insufficient permissions to fetch channel history.", ephemeral: true }));
     },
 };
