@@ -11,6 +11,9 @@ module.exports = {
             return interaction.reply({ content: "You can use this command only on servers!", ephemeral: true });
         if (!interaction.channel.permissionsFor(interaction.member).has('MANAGE_MESSAGES'))
             return interaction.reply({ content: "You do not have enough permissions to do this.", ephemeral: true });
+        
+        if (!interaction.guild.me.hasPermission('MANAGE_MESSAGES'))
+            return interaction.reply({ content: "The bot has insufficient permissions to delete messages.", ephemeral: true });
 
         var amount = interaction.options.getInteger('amount');
         if (!amount) amount = 100;
@@ -24,7 +27,7 @@ module.exports = {
             interaction.channel.bulkDelete(messages, true).then(messages => {
                 // TODO: No reply setting
                 return interaction.reply(`Deleted ${messages.size} message${messages.size != 1 ? 's' : ''} in this channel${user ? ` from ${user}` : ''}.`);
-            }).catch();
-        }).catch();
+            });
+        });
     },
 };
