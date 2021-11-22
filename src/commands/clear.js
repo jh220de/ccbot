@@ -12,7 +12,7 @@ module.exports = {
         if (!interaction.channel.permissionsFor(interaction.member).has('MANAGE_MESSAGES'))
             return interaction.reply({ content: "You do not have enough permissions to do this.", ephemeral: true });
         
-        if (!interaction.guild.me.hasPermission('MANAGE_MESSAGES'))
+        if (!interaction.guild.me.permissions.has('MANAGE_MESSAGES'))
             return interaction.reply({ content: "The bot has insufficient permissions to delete messages.", ephemeral: true });
 
         var amount = interaction.options.getInteger('amount');

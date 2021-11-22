@@ -25,7 +25,6 @@ client.on('interactionCreate', async interaction => {
     if (!client.commands.has(commandName)) return;
 
     try {
-        console.log(interaction);
         await client.commands.get(commandName).execute(interaction);
     } catch (error) {
         console.error(error);
