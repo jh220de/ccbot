@@ -5,17 +5,19 @@ module.exports = {
         .setName('clearall')
         .setDescription("Clears ♻️ all messages in a channel"),
     async execute(interaction) {
+        if (interaction.guild == null)
+            return interaction.reply({ content: "You can use this command only on servers!", ephemeral: true });
         if (interaction.channel.type != 'GUILD_TEXT')
             return interaction.reply({ content: "You can use this command only in text channels on servers!", ephemeral: true });
         if (!interaction.channel.permissionsFor(interaction.member).has('MANAGE_CHANNELS'))
             return interaction.reply({ content: "You do not have enough permissions to do this.", ephemeral: true });
         
         if (!interaction.channel.permissionsFor(interaction.guild.me).has('MANAGE_CHANNELS'))
-            return interaction.reply({ content: "The bot has insufficient permissions to manage channels.", ephemeral: true });
+            return interaction.reply({ content: "The bot has insufficient permissions to manage this channel.", ephemeral: true });
         
         if(interaction.channel.partial) {
             if(!interaction.channel.parent.permissionsFor(interaction.guild.me).has('MANAGE_CHANNELS'))
-                return interaction.reply({ content: "The bot has insufficient permissions to manage channels.", ephemeral: true });
+                return interaction.reply({ content: "The bot has insufficient permissions to manage channels in this category.", ephemeral: true });
         } else if(!interaction.guild.me.permissions.has('MANAGE_CHANNELS'))
             return interaction.reply({ content: "The bot has insufficient permissions to manage channels.", ephemeral: true });
         

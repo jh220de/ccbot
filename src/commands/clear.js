@@ -7,6 +7,8 @@ module.exports = {
         .addIntegerOption(option => option.setName('amount').setDescription("Number of messages to clear"))
         .addUserOption(option => option.setName('target').setDescription("Clear messages only from a specific user")),
     async execute(interaction) {
+        if (interaction.guild == null)
+            return interaction.reply({ content: "You can use this command only on servers!", ephemeral: true });
         if (interaction.channel.type != 'GUILD_TEXT')
             return interaction.reply({ content: "You can use this command only in text channels on servers!", ephemeral: true });
         if (!interaction.channel.permissionsFor(interaction.member).has('MANAGE_MESSAGES'))
