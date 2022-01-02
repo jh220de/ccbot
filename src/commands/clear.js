@@ -37,9 +37,11 @@ module.exports = {
                     'SELECT * FROM `settings` WHERE `serverId` = ?',
                     [interaction.guild.id],
                     function(err, results, fields) {
+                        var ephemeral = false;
+                        if(results[0]) ephemeral = results[0].showreply == 0
                         return interaction.reply({
                             content: `Deleted ${messages.size} message${messages.size != 1 ? 's' : ''} in this channel${user ? ` from ${user}` : ''}.`,
-                            ephemeral: results[0].showreply == 0
+                            ephemeral: ephemeral
                         });
                     }
                 );
