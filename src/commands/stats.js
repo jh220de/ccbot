@@ -4,7 +4,7 @@ const { MessageEmbed } = require('discord.js');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('stats')
-        .setDescription("Sends the bot's stats. 📈"),
+        .setDescription("Sends the bot's stats 📈"),
     async execute(interaction) {
         const promises = [
             interaction.client.shard.fetchClientValues('guilds.cache.size'),

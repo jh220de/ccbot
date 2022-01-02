@@ -1,7 +1,7 @@
 ---
-name: Bug report
-about: Create a report to help us improve
-title: ''
+name: Error occurring in a command
+about: Creates a report about an error that occurs when executing the command
+title: 'Error-ID: '
 labels: ''
 assignees: ''
 

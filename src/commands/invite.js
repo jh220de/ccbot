@@ -4,7 +4,7 @@ const { MessageEmbed } = require('discord.js');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('invite')
-        .setDescription("Sends the bot's invite link to put it on your own server. ✨"),
+        .setDescription("Sends the bot's invite link to put it on your own server ✨"),
     async execute(interaction) {
         const embed = new MessageEmbed()
             .setColor('00FFFF')
