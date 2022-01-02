@@ -20,36 +20,38 @@ module.exports = {
             'SELECT * FROM `settings` WHERE `serverId` = ?',
             [interaction.guildId],
             function(err, results, fields) {
-                if(!results[0])
+                if(!results[0]) {
                     connection.execute(
                         'INSERT INTO `settings` values (?, ?)',
-                        [interaction.guildId, true]
+                        [interaction.guildId, true],
+                        function(err, results, fields) {
+                            return interaction.reply({ content: `
+The current server has been added to the database.
+Please execute this command again.
+                            ` });
+                        }
                     );
-            }
-        );
-        connection.execute(
-            'SELECT * FROM `settings` WHERE `serverId` = ?',
-            [interaction.guildId],
-            function(err, results, fields) {
-                const result = results[0];
-                switch (interaction.options.getSubcommand()) {
-                    case "show":
-                        const embed = new MessageEmbed()
-                            .setColor('00FFFF')
-                            .setTitle("ClearChat-Bot Settings page")
-                            .addField('showreply',(result.showreply == 1).toString());
-                        return interaction.reply({ embeds: [embed] });
-                    case "showreply":
-                        const current = result.showreply == 1;
-                        const showreply = interaction.options.getBoolean('showreply');
-                        if(current == showreply) return interaction.reply({ content: "Nothing changed." });
-                        connection.execute(
-                            'UPDATE `settings` SET `showreply` = ? WHERE `serverId` = ?',
-                            [showreply ? 1 : 0, interaction.guildId],
-                            function(err, results, fields) {
-                                return interaction.reply({ content: `Showreply changed to ${showreply}.` });
-                            }
-                        );
+                } else {
+                    const result = results[0];
+                    switch (interaction.options.getSubcommand()) {
+                        case "show":
+                            const embed = new MessageEmbed()
+                                .setColor('00FFFF')
+                                .setTitle("ClearChat-Bot Settings page")
+                                .addField('showreply',(result.showreply == 1).toString());
+                            return interaction.reply({ embeds: [embed] });
+                        case "showreply":
+                            const current = result.showreply == 1;
+                            const showreply = interaction.options.getBoolean('showreply');
+                            if(current == showreply) return interaction.reply({ content: "Nothing changed." });
+                            connection.execute(
+                                'UPDATE `settings` SET `showreply` = ? WHERE `serverId` = ?',
+                                [showreply ? 1 : 0, interaction.guildId],
+                                function(err, results, fields) {
+                                    return interaction.reply({ content: `Showreply changed to ${showreply}.` });
+                                }
+                            );
+                    }
                 }
             }
         );
