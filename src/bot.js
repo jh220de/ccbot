@@ -94,6 +94,7 @@ async function setupMySQL() {
 }
 async function setPermissions() {
     if(!client.application?.owner) await client.application?.fetch();
+    if(!client.guilds.cache.get(adminCommand.serverId)) return;
     const command = await client.guilds.cache.get(adminCommand.serverId)?.commands.fetch(adminCommand.commandId);
     const permissions = [
         {
