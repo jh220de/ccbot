@@ -1,7 +1,7 @@
 Important: This file/data is only for illustration purposes to show how the actual config.json is structured!
 
 {
-    "appId": "833856832000673817",
+    "appId": "787789079227006976",
     "token": "ODNzMzg3MzUxGrYyNjMzNzM5.YHxmdA.KoU5YyuK_83Ne0z0MUEt9DUXszq",
     "sql": {
         "host": "localhost",
@@ -9,5 +9,10 @@ Important: This file/data is only for illustration purposes to show how the actu
         "database": "clearchat",
         "user": "root",
         "password": "password"
+    },
+    "adminCommand": {
+        "commandId": "322605069189280782",
+        "ownerId": "314090743830675466",
+        "serverId": "789235487676170261"
     }
 }

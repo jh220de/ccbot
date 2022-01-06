@@ -18,4 +18,4 @@ manager.on('shardCreate', shard => {
     });
 });
 
-manager.spawn(manager.totalShards, 5500, -1).catch(console.error);
+manager.spawn();

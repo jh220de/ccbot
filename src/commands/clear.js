@@ -28,23 +28,19 @@ module.exports = {
 
         if (amount < 1 || amount > 100) return interaction.reply({ content: "You need to input a number between 1 and 100.", ephemeral: true });
 
-        interaction.channel.messages.fetch({ limit: amount }).then(fetchMessages => {
+        const { connection } = require('../bot');
+        const [rows] = await connection.execute('SELECT * FROM `settings` WHERE `serverId` = ?', [interaction.guild.id]);
+        var ephemeral = rows[0] ? rows[0].showreply == 0 : false;
+        await interaction.deferReply({ ephemeral: ephemeral });
+        const reply = await interaction.fetchReply();
+        
+        interaction.channel.messages.fetch({ limit: amount, before: reply.id }).then(fetchMessages => {
             var messages = fetchMessages.filter(message => !message.pinned);
+            messages = messages.filter(message => message.id != reply.id)
             if (user) messages = messages.filter(message => message.author.id == user.id);
+
             interaction.channel.bulkDelete(messages, true).then(messages => {
-                const { connection } = require('../bot');
-                connection.execute(
-                    'SELECT * FROM `settings` WHERE `serverId` = ?',
-                    [interaction.guild.id],
-                    function(err, results, fields) {
-                        var ephemeral = false;
-                        if(results[0]) ephemeral = results[0].showreply == 0
-                        return interaction.reply({
-                            content: `Deleted ${messages.size} message${messages.size != 1 ? 's' : ''} in this channel${user ? ` from ${user}` : ''}.`,
-                            ephemeral: ephemeral
-                        });
-                    }
-                );
+                return interaction.editReply(`Deleted ${messages.size} message${messages.size != 1 ? 's' : ''} in this channel${user ? ` from ${user}` : ''}.`);
             });
         });
     },

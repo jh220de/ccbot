@@ -22,10 +22,13 @@ module.exports = {
             return interaction.reply({ content: "The bot has insufficient permissions to manage channels.", ephemeral: true });
         
         await interaction.deferReply();
+        const { connection } = require('../bot');
+        const [rows] = await connection.execute('SELECT * FROM `settings` WHERE `serverId` = ?', [interaction.guild.id]);
+        var ephemeral = rows[0] ? rows[0].showreply == 0 : false;
         interaction.channel.delete();
         interaction.channel.clone().then(channel => {
             if(channel.permissionsFor(interaction.guild.me).has('SEND_MESSAGES'))
-                return channel.send(`Deleted all messages in this channel by ${interaction.user}.`);
+                if(!ephemeral) return channel.send(`Deleted all messages in this channel by ${interaction.user}.`);
         });
     },
 };
