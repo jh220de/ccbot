@@ -6,6 +6,7 @@ const { token, sql, adminCommand } = require('../config.json');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 client.commands = new Collection();
+var active = false;
 const commandFiles = fs.readdirSync('./src/commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
@@ -13,6 +14,7 @@ for (const file of commandFiles) {
 }
 
 client.on('interactionCreate', async interaction => {
+    if(!active) return;
     if (!interaction.isCommand()) return;
     const { commandName } = interaction;
     if (!client.commands.has(commandName)) return;
@@ -88,7 +90,8 @@ async function setupMySQL() {
 }
 async function startActivity() {
     const wait = require('util').promisify(setTimeout);
-    await wait(120000)
+    await wait(90000);
+    active = true;
     setInterval(setActivity, 30000);
 }
 var count = 1;
