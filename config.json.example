@@ -14,5 +14,10 @@ Important: This file/data is only for illustration purposes to show how the actu
         "commandId": "322605069189280782",
         "ownerId": "314090743830675466",
         "serverId": "789235487676170261"
+    },
+    "topgg": {
+        "enabled": true,
+        "token": "qusjVXgHj6zrE6SYQ7uhb8amYfQ2LFJKwmrD.xQ5RDWuHgqcsK4QNv5aG8e2AHE9rLHcX3zEPgVwbwLw4ApezYxLSvJV5WVD2Tc5MpU4ve66wNV.6837Tc8FyLEHD8Y53CfvdVuAtuJxwCrZj6_GHjCrh79",
+        "webhook": "M86c2qdQCLHnVnRgT72gXJCAA4AtJmg9fUMCD3myn8g7VhxPKS2FDqfTGuvHyec36mgTqL2a4uHwRFYGTr3BNRKmgEMVEndFtqRqyVvExs9jAMB5hvurwZX65nJCeXbP"
     }
 }

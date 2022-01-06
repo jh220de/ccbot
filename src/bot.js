@@ -107,7 +107,7 @@ async function setPermissions() {
 }
 
 client.on('ready', () => {
-    setInterval(setActivity, 30000);
+    setInterval(setActivity, 60000);
     setupMySQL();
     setPermissions();
 });
