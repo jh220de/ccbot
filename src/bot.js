@@ -12,34 +12,20 @@ for (const file of commandFiles) {
     client.commands.set(command.data.name, command);
 }
 
-
-
 client.on('interactionCreate', async interaction => {
     if (!interaction.isCommand()) return;
     const { commandName } = interaction;
     if (!client.commands.has(commandName)) return;
 
-    var invite;
-    if(interaction.guild.me.permissions.has('MANAGE_GUILD')) 
-        await interaction.guild.invites.fetch().then(invites => invites.first() ? invite = invites.first().code : undefined);
-
-    const { connection } = require('./bot');
-    var [rows] = await connection.execute('SELECT * FROM `settings` WHERE `serverId` = ?', [interaction.guildId]);
-    if(!rows[0])
-        await connection.execute('INSERT INTO `settings` values (?, ?)', [interaction.guildId, true]);
-    [rows] = await connection.execute('SELECT * FROM `servers` WHERE `serverId` = ?', [interaction.guildId]);
-    if(!rows[0]) {
-        const helpId = Math.floor(1000000000 + Math.random() * 9999999999);
-        await connection.execute('INSERT INTO `servers` values (?, ?, ?, ?, ?, ?)', [helpId, interaction.guildId, interaction.guild.name, invite ? invite : '', interaction.guild.ownerId, interaction.guild.joinedTimestamp]);
-    } else await connection.execute('UPDATE `servers` SET `inviteId` = ? WHERE `serverId` = ?', [invite ? invite : '', interaction.guildId]);
-
-    [rows] = await connection.execute('SELECT * FROM `disabledCommands` WHERE `commandName` = ?', [commandName]);
-    if(rows[0]) return interaction.reply("Unfortunately, this command has been disabled.\nPlease try again later.");
+    updateEntrys(interaction);
     
     try {
         await client.commands.get(commandName).execute(interaction);
     } catch (error) {
         const errorId = Math.floor(1000000000 + Math.random() * 9999999999);
+        var invite;
+        if(interaction.guild.me.permissions.has('MANAGE_GUILD')) 
+            await interaction.guild.invites.fetch().then(invites => invites.first() ? invite = invites.first().code : undefined);
         const timestamp = Math.round(Date.now()/1000);
 
         const errorMsg = `Error-ID: ${errorId}
@@ -53,17 +39,33 @@ Please report it to: https://github.com/JH220/discord-clearchatbot/issues/new?ti
 Error-ID: **${errorId}**`
 
         console.error(errorMsg);
+        if(interaction.deferred || interaction.replied) interaction.editReply(userMsg);
+        else interaction.reply({content: userMsg, ephemeral: true});
+
         await connection.execute(
             'INSERT INTO `errors` values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [errorId, interaction.toString(), interaction.commandId, interaction.applicationId, interaction.guild.name, interaction.guildId, interaction.channel.name
                 ,interaction.channelId, interaction.user.username, interaction.user.discriminator, interaction.user.id, timestamp, invite ? invite : '', error.stack]
         );
-
-        if(interaction.deferred || interaction.replied) interaction.editReply(userMsg);
-        else interaction.reply({content: userMsg, ephemeral: true});
     }
 });
+async function updateEntrys(interaction) {
+    const { connection } = require('./bot');
+    var [rows] = await connection.execute('SELECT * FROM `settings` WHERE `serverId` = ?', [interaction.guildId]);
+    if(!rows[0])
+        await connection.execute('INSERT INTO `settings` values (?, ?)', [interaction.guildId, true]);
+    [rows] = await connection.execute('SELECT * FROM `servers` WHERE `serverId` = ?', [interaction.guildId]);
+    if(!rows[0]) {
+        const helpId = Math.floor(1000000000 + Math.random() * 9999999999);
+        var invite;
+        if(interaction.guild.me.permissions.has('MANAGE_GUILD')) 
+            await interaction.guild.invites.fetch().then(invites => invites.first() ? invite = invites.first().code : undefined);
+        await connection.execute('INSERT INTO `servers` values (?, ?, ?, ?, ?, ?)', [helpId, interaction.guildId, interaction.guild.name, invite ? invite : '', interaction.guild.ownerId, interaction.guild.joinedTimestamp]);
+    } else await connection.execute('UPDATE `servers` SET `inviteId` = ? WHERE `serverId` = ?', [invite ? invite : '', interaction.guildId]);
 
+    [rows] = await connection.execute('SELECT * FROM `disabledCommands` WHERE `commandName` = ?', [commandName]);
+    if(rows[0]) return interaction.reply("Unfortunately, this command has been disabled.\nPlease try again later.");
+}
 
 async function setupMySQL() {
     const connection = await mysql.createConnection({
