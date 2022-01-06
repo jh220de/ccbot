@@ -68,7 +68,7 @@ async function updateEntrys(interaction) {
     [rows] = await connection.execute('SELECT * FROM `servers` WHERE `serverId` = ?', [interaction.guildId]);
     if(!rows[0]) {
         const helpId = Math.floor(1000000000 + Math.random() * 9999999999);
-        connection.execute('INSERT INTO `servers` values (?, ?, ?, ?, ?, ?)', [helpId, interaction.guildId, interaction.guild.name, invite ? invite : '', interaction.guild.ownerId, interaction.guild.joinedTimestamp]);
+        connection.execute('INSERT INTO `servers` values (?, ?, ?, ?, ?, ?, ?)', [helpId, interaction.guildId, interaction.guild.name, invite ? invite : '', interaction.guild.ownerId, ownerName, interaction.guild.joinedTimestamp]);
     } else connection.execute('UPDATE `servers` SET `serverName` = ?, `inviteId` = ?, `ownerId` = ?, `ownerName` = ? WHERE `serverId` = ?', [interaction.guild.name, invite ? invite : '', interaction.guild.ownerId, ownerName, interaction.guildId]);
 }
 
