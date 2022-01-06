@@ -24,7 +24,7 @@ module.exports = {
         ).addSubcommand(subcommand => subcommand
             .setName('help')
             .setDescription("Shows information of a specified help ID.")
-            .addIntegerOption(option => option.setName('id').setDescription("Enter the help ID of the server here.").setRequired(true))
+            .addStringOption(option => option.setName('id').setDescription("Enter the help ID of the server here.").setRequired(true))
         ).addSubcommand(subcommand => subcommand
             .setName('whitelist')
             .setDescription("Adds or removes a specific user from the Vote whitelist.")
@@ -35,12 +35,13 @@ module.exports = {
         const { connection } = require ('../bot');
         if(interaction.user.id != adminCommand.ownerId) return;
         var rows;
+        var result;
         
         switch (interaction.options.getSubcommand()) {
             case 'error':
                 const errorId = interaction.options.getInteger('id');
                 [rows] = await connection.execute('SELECT * FROM `errors` WHERE `errorId` = ?', [errorId]);
-                const result = rows[0];
+                result = rows[0];
 
                 if(!result) return interaction.reply({ content: "The specified error does not exist.", ephemeral: true});
                 
@@ -48,7 +49,7 @@ module.exports = {
 Executed command: "${result.command}" (${result.commandId}, ${result.applicationId})
 Executed at: "${result.serverName}" (${result.serverId}) in "#${result.channelName}" <#${result.channelId}>
 Executed by: ${result.userName}#${result.userDiscriminator} (<@${result.userId}>)
-Executed <t:${result.timestamp}:R>${result.invite == '' ? `\nServer invite: discord.gg/${result.invite}` : ''}
+Executed <t:${result.timestamp}:R>${result.inviteId != '' ? `\nServer invite: discord.gg/${result.inviteId}` : ''}
 Error: ${result.error}`);
             case 'toggle':
                 const command = interaction.options.getString('command');
@@ -62,7 +63,19 @@ Error: ${result.error}`);
                     return interaction.reply(`The command ${command} was successfully disabled.`);
                 }
             case 'help':
-                return interaction.reply({ content: "Under construction!", ephemeral: true });
+                const helpId = interaction.options.getString('id');
+                [rows] = await connection.execute('SELECT * FROM `servers` WHERE `helpId` = ?', [helpId]);
+                if(!rows[0]) {
+                    [rows] = await connection.execute('SELECT * FROM `servers` WHERE `serverId` = ?', [helpId]);
+                    if(!rows[0])
+                        return interaction.reply({ content: "The specified help page does not exist.", ephemeral: true});
+                }
+
+                result = rows[0];
+                return interaction.reply(`**Help-ID: ${result.helpId}**
+Server: "${result.serverName}" (${result.serverId})${result.inviteId != '' ? `\nServer invite: discord.gg/${result.inviteId}` : ''}
+Owner: "${result.ownerName}" <@${result.ownerId}>
+Joined Timestamp <t:${Math.round(result.joinedTimestamp/1000)}:R>`);
             case 'whitelist':
                 const user = interaction.options.getUser('user');
                 [rows] = await connection.execute('SELECT * FROM `votes_whitelisted` WHERE `userId` = ?', [user.id]);

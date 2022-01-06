@@ -4,9 +4,10 @@
   "description": "Get back control of your Discord server now and use the useful features of ClearChat bot!",
   "main": "src/index.js",
   "scripts": {
-    "prod": "nodemon -x 'node . || touch src/index.js'",
+    "prod": "node .",
     "dev": "nodemon",
-    "refresh": "node src/refresh.js"
+    "restart": "nodemon -x 'node . || touch src/index.js'",
+    "register": "node src/register.js"
   },
   "author": "JH220",
   "license": "ISC",
