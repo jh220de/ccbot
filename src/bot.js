@@ -75,10 +75,10 @@ async function setupMySQL() {
     });
     module.exports = { connection };
 
-    connection.execute('CREATE TABLE IF NOT EXISTS `servers` (helpId VARCHAR(10), serverId VARCHAR(18), serverName VARCHAR(100), inviteId VARCHAR(8), ownerId VARCHAR(18), joinedTimestamp VARCHAR(16))');
+    connection.execute('CREATE TABLE IF NOT EXISTS `servers` (helpId VARCHAR(10), serverId VARCHAR(18), serverName VARCHAR(100), inviteId VARCHAR(10), ownerId VARCHAR(18), joinedTimestamp VARCHAR(16))');
     connection.execute('CREATE TABLE IF NOT EXISTS `settings` (serverId VARCHAR(18), showreply TINYINT(1))');
     connection.execute('CREATE TABLE IF NOT EXISTS `autoclear` (channelId VARCHAR(18), mode VARCHAR(10))');
-    connection.execute('CREATE TABLE IF NOT EXISTS `errors` (errorId VARCHAR(10), command VARCHAR(100), commandId VARCHAR(18), applicationId VARCHAR(18), serverName VARCHAR(100), serverId VARCHAR(18), channelName VARCHAR(100), channelId VARCHAR(18), userName VARCHAR(100), userDiscriminator VARCHAR(4), userId VARCHAR(18), timestamp VARCHAR(16), inviteId VARCHAR(8), error VARCHAR(1000))');
+    connection.execute('CREATE TABLE IF NOT EXISTS `errors` (errorId VARCHAR(10), command VARCHAR(100), commandId VARCHAR(18), applicationId VARCHAR(18), serverName VARCHAR(100), serverId VARCHAR(18), channelName VARCHAR(100), channelId VARCHAR(18), userName VARCHAR(100), userDiscriminator VARCHAR(4), userId VARCHAR(18), timestamp VARCHAR(16), inviteId VARCHAR(10), error VARCHAR(1000))');
     connection.execute('CREATE TABLE IF NOT EXISTS `disabledCommands` (commandName VARCHAR(20))');
     connection.execute('CREATE TABLE IF NOT EXISTS `votes` (userId VARCHAR(18), voteTimestamp VARCHAR(16))');
     connection.execute('CREATE TABLE IF NOT EXISTS `votes_whitelisted` (userId VARCHAR(18))');
