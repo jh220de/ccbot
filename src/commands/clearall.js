@@ -12,6 +12,11 @@ module.exports = {
         if (!interaction.channel.permissionsFor(interaction.member).has('MANAGE_CHANNELS'))
             return interaction.reply({ content: "You do not have enough permissions to do this.", ephemeral: true });
         
+        if (interaction.guild.rulesChannelId == interaction.channel.id)
+            return interaction.reply({ content: "Since this channel has been set as a rules channel, this channel cannot be deleted.", ephemeral: true });
+        if (interaction.guild.publicUpdatesChannelId == interaction.channel.id)
+            return interaction.reply({ content: "Since this channel has been set as a community updates channel, this channel cannot be deleted.", ephemeral: true });
+        
         if (!interaction.channel.permissionsFor(interaction.guild.me).has('MANAGE_CHANNELS'))
             return interaction.reply({ content: "The bot has insufficient permissions to manage this channel.", ephemeral: true });
         

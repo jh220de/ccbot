@@ -1,9 +1,10 @@
-const { token, topgg } = require('../config.json');
+const { token, topgg, sql } = require('../config.json');
 
 const { ShardingManager } = require('discord.js');
 const { AutoPoster } = require('topgg-autoposter');
 const { Webhook } = require('@top-gg/sdk');
 const express = require('express');
+const mysql = require('mysql2/promise');
 
 const manager = new ShardingManager('./src/bot.js', {
     totalShards: 'auto',
@@ -15,6 +16,7 @@ const manager = new ShardingManager('./src/bot.js', {
 const whserver = topgg.enabled ? express() : undefined;
 const ap = topgg.enabled ? AutoPoster(topgg.token, manager) : undefined;
 const webhook = topgg.enabled ? new Webhook(topgg.webhook) : undefined;
+var connection;
 
 manager.on('shardCreate', shard => {
     const start = Date.now();
@@ -25,9 +27,21 @@ manager.on('shardCreate', shard => {
     });
 });
 if(topgg.enabled) ap.on('posted', () => console.log("Posted stats to Top.gg!"));
-if(topgg.enabled) whserver.post('/dblwebhook', webhook.listener(vote => {
-    console.log(vote.user);
-}));
+if(topgg.enabled) whserver.post('/dblwebhook', webhook.listener(vote => addVote(vote.user)));
+
+async function addVote(userId) {
+    connection.execute('INSERT INTO `votes` values (?, ?)', [userId, Math.round(Date.now()/1000)]);
+}
+
+(async () => {
+    connection = await mysql.createConnection({
+        host: sql.host,
+        port: sql.port,
+        database: sql.database,
+        user: sql.user,
+        password: sql.password
+    });
+})();
 
 manager.spawn();
 if(topgg.enabled) whserver.listen(1337);

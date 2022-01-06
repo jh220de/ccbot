@@ -14,38 +14,64 @@ module.exports = {
         .setDescription("This command is used for debug and is only enabled on the Development Network.")
         .setDefaultPermission(false)
         .addSubcommand(subcommand => subcommand
-            .setName('showerror')
+            .setName('error')
             .setDescription("Shows an exception of a specified error ID.")
             .addIntegerOption(option => option.setName('id').setDescription("Enter the error ID of the user here.").setRequired(true))
-        )
-        .addSubcommand(subcommand => subcommand
-            .setName('togglecommand')
+        ).addSubcommand(subcommand => subcommand
+            .setName('toggle')
             .setDescription("Disables or enables a selected command.")
             .addStringOption(option => option.setName('command').setDescription("Specify the command here.").setChoices(commands).setRequired(true))
+        ).addSubcommand(subcommand => subcommand
+            .setName('help')
+            .setDescription("Shows information of a specified help ID.")
+            .addIntegerOption(option => option.setName('id').setDescription("Enter the help ID of the server here.").setRequired(true))
+        ).addSubcommand(subcommand => subcommand
+            .setName('whitelist')
+            .setDescription("Adds or removes a specific user from the Vote whitelist.")
+            .addUserOption(option => option.setName('user').setDescription("Specify the user here.").setRequired(true))
         ),
     async execute(interaction) {
         const { adminCommand } = require('../../config.json');
-        if(interaction.member.id != adminCommand.ownerId) return;
+        const { connection } = require ('../bot');
+        if(interaction.user.id != adminCommand.ownerId) return;
+        var rows;
         
         switch (interaction.options.getSubcommand()) {
-            case 'showerror':
+            case 'error':
                 const errorId = interaction.options.getInteger('id');
-                const { errors } = require('../bot');
-                console.log(errors);
-                const error = errors.get(errorId);
+                [rows] = await connection.execute('SELECT * FROM `errors` WHERE `errorId` = ?', [errorId]);
+                const result = rows[0];
 
-                if(!error) return interaction.reply({ content: "The specified error does not exist.", ephemeral: true});
-                return interaction.reply(error);
-            case 'togglecommand':
-                const { disabledCommands } = require('../bot');
+                if(!result) return interaction.reply({ content: "The specified error does not exist.", ephemeral: true});
+                
+                return interaction.reply(`**Error-ID: ${errorId}**
+Executed command: "${result.command}" (${result.commandId}, ${result.applicationId})
+Executed at: "${result.serverName}" (${result.serverId}) in "#${result.channelName}" <#${result.channelId}>
+Executed by: ${result.userName}#${result.userDiscriminator} (<@${result.userId}>)
+Executed <t:${result.timestamp}:R>${result.invite == '' ? `\nServer invite: discord.gg/${result.invite}` : ''}
+Error: ${result.error}`);
+            case 'toggle':
                 const command = interaction.options.getString('command');
-                const index = disabledCommands.indexOf(command);
-                if(index !== -1) {
-                    disabledCommands.splice(index, 1);
+                [rows] = await connection.execute('SELECT * FROM `disabledCommands` WHERE `commandName` = ?', [command]);
+                
+                if(rows[0]) {
+                    await connection.execute('DELETE FROM `disabledCommands` WHERE `commandName` = ?', [command]);
                     return interaction.reply(`The command ${command} was successfully enabled.`);
                 } else {
-                    disabledCommands.push(command);
+                    await connection.execute('INSERT INTO `disabledCommands` values (?)', [command]);
                     return interaction.reply(`The command ${command} was successfully disabled.`);
+                }
+            case 'help':
+                return interaction.reply({ content: "Under construction!", ephemeral: true });
+            case 'whitelist':
+                const user = interaction.options.getUser('user');
+                [rows] = await connection.execute('SELECT * FROM `votes_whitelisted` WHERE `userId` = ?', [user.id]);
+                if(!rows[0]) {
+                    await connection.execute('INSERT INTO `votes_whitelisted` values (?)', [user.id]);
+                    return interaction.reply(`The user ${user} was whitelisted successfully.`);
+                } else {
+                    await connection.execute('DELETE FROM `votes_whitelisted` WHERE `userId` = ?', [user.id]);
+                    return interaction.reply(`The user ${user} was removed from whitelist successfully.`);
                 }
         }
     },

@@ -5,20 +5,22 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('autoclear')
         .setDescription("Clears the channel history after a certain amount of time")
-        .addIntegerOption(option => option.setName('duration').setDescription("Specifies after what time the messages should be deleted"))
+        .addIntegerOption(option => option.setName('duration').setDescription("Specifies after what time (in seconds) the messages should be deleted (default: 3 sec)"))
         .addStringOption(option => option
             .setName('mode')
-            .setDescription("Specifies which messages are going to be deleted")
+            .setDescription("Specifies the mode (default: All messages), leave blank to remove current mode.")
             .addChoice('All messages', 'all')
             .addChoice('Only messages from bots', 'bots')
-            .addChoice('Only messages from webhooks', 'webhooks')
             .addChoice('Only messages from users', 'users')
+            .addChoice('Only messages with links', 'links')
+            .addChoice('Only messages without links', 'nonlinks')
         ),
     async execute(interaction) {
-        const embed = new MessageEmbed()
-            .setColor('00FFFF')
-            .setTitle("ClearChat-Bot Auto Clear")
-            .setDescription("Under construction!");
-        return interaction.reply({ embeds: [embed], ephemeral: true });
+        var mode = interaction.options.getString('mode');
+        var duration = interaction.options.getInteger('duration');
+        if(!duration) duration = 3;
+
+        if(!mode) return; // TODO
+        if(!voted) return; // TODO
     },
 };

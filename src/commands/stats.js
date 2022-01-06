@@ -6,11 +6,8 @@ module.exports = {
         .setName('stats')
         .setDescription("Sends the bot's stats 📈"),
     async execute(interaction) {
-        /*const { connection } = require('../bot');
-        const [rows] = await connection.execute('SELECT * FROM `servers` WHERE `serverId` = ?', [interaction.guild.id]);
-        var ephemeral = rows[0] ? rows[0].showreply == 0 : false;
-        console.log(ephemeral);
-        const errorId = Math.floor(1000000000 + Math.random() * 9999999999);*/
+        const { connection } = require('../bot');
+        const [rows] = await connection.execute('SELECT * FROM `servers` WHERE `serverId` = ?', [interaction.guildId]);
 
         const promises = [
             interaction.client.shard.fetchClientValues('guilds.cache.size'),
@@ -29,7 +26,7 @@ module.exports = {
 **Members:** ${(members - servers).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}
 **Ping:** ${Math.round(interaction.client.ws.ping)}ms
 ${interaction.guild != null ? `**Shard:** ${interaction.guild.shardId + 1}
-**Help-ID:** ${'Not available yet.'}\n` : ''}
+**Help-ID:** ${rows[0].helpId}\n` : ''}
 If you want to invite this bot to your server, you can do it via the following link: http://jh220.de/ccbot
 *Note:* If you need help with the bot, please visit our Discord: http://jh220.de/cc/help
             `);
