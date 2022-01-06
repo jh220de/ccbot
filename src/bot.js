@@ -51,6 +51,7 @@ Error-ID: **${errorId}**`
 });
 async function updateEntrys(interaction) {
     const { connection } = require('./bot');
+    const { commandName } = interaction;
     var [rows] = await connection.execute('SELECT * FROM `settings` WHERE `serverId` = ?', [interaction.guildId]);
     if(!rows[0])
         await connection.execute('INSERT INTO `settings` values (?, ?)', [interaction.guildId, true]);
