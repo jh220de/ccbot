@@ -22,12 +22,14 @@ client.on('interactionCreate', async interaction => {
     if (!client.commands.has(commandName)) return;
 
     updateEntrys(interaction.guild);
+
+    [rows] = await connection.execute('SELECT * FROM `disabledCommands` WHERE `commandName` = ?', [commandName]);
+    if(rows[0]) return interaction.reply("Unfortunately, this command has been disabled.\nPlease try again later.");
+
     connection.execute('INSERT INTO `stats` VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',[
         interaction.id, interaction.commandId, interaction.guildId, interaction.channelId, interaction.channel.name, interaction.user.id,
         Math.round(Date.now()/1000), interaction.toString(), 0
     ]);
-    [rows] = await connection.execute('SELECT * FROM `disabledCommands` WHERE `commandName` = ?', [commandName]);
-    if(rows[0]) return interaction.reply("Unfortunately, this command has been disabled.\nPlease try again later.");
     
     try {
         await client.commands.get(commandName).execute(interaction);
@@ -128,7 +130,7 @@ async function setupMySQL() {
     connection.execute('CREATE TABLE IF NOT EXISTS `votes` (userId VARCHAR(18), voteTimestamp VARCHAR(16))');
     connection.execute('CREATE TABLE IF NOT EXISTS `votes_whitelisted` (userId VARCHAR(18))');
     connection.execute('CREATE TABLE IF NOT EXISTS `disabledCommands` (commandName VARCHAR(20))');
-    connection.execute('CREATE TABLE IF NOT EXISTS `stats` (interactionId VARCHAR(18), commandId VARCHAR(18), serverId VARCHAR(18), channelId VARCHAR(18), channelName VARCHAR(100), userId VARCHAR(18), timestamp VARCHAR(16), command VARCHAR(100), execCount VARCHAR(8))');
+    connection.execute('CREATE TABLE IF NOT EXISTS `stats` (interactionId VARCHAR(18), commandId VARCHAR(18), serverId VARCHAR(18), channelId VARCHAR(18), channelName VARCHAR(100), userId VARCHAR(18), timestamp VARCHAR(16), command VARCHAR(100), execCount INT)');
     //connection.execute('CREATE TABLE IF NOT EXISTS `autoclear` (serverId VARCHAR(18), channelId VARCHAR(18), mode VARCHAR(10))');
 }
 
@@ -180,6 +182,7 @@ client.once('ready', async () => {
     setPermissions();
 });
 client.once('shardReady', async () => {
+    if(active) return;
     await wait(delay);
     console.log("Waiting done.");
     active = true;
