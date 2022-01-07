@@ -7,7 +7,7 @@ const { token, sql, adminCommand, delay } = require('../config.json');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 client.commands = new Collection();
-var active = true;
+var active = false;
 var connection;
 const commandFiles = fs.readdirSync('./src/commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
