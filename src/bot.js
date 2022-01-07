@@ -175,11 +175,9 @@ async function setPermissions() {
     await command.permissions.add({ permissions });
 }
 
-client.once('ready', () => {
+client.once('ready', async () => {
     setupMySQL();
     setPermissions();
-});
-client.once('shardReady', async () => {
     await wait(delay);
     console.log("Waiting done.");
     active = true;
