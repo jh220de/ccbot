@@ -184,9 +184,6 @@ client.once('shardReady', async () => {
     console.log("Waiting done.");
     active = true;
     setInterval(setActivity, 30000);
-    client.guilds.cache.each(guild => {
-        updateEntrys(guild);
-    });
 });
 
 client.login(token);
