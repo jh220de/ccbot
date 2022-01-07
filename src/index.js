@@ -45,4 +45,3 @@ async function addVote(userId) {
 
 manager.spawn();
 if(topgg.enabled) whserver.listen(1337);
-console.log(1);
