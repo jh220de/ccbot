@@ -91,12 +91,12 @@ async function updateEntrys(guild) {
         var helpId;
         while(await existsHelpId(helpId)) helpId = parseInt((Math.floor(1000000000 + Math.random() * 9999999999) + '').substring(0, 10));
         connection.execute(
-            'INSERT INTO `servers` values (?, ?, ?, ?, ?, ?, ?, ?)',
-            [helpId, guild.id, guild.name, invite ? invite : '', guild.ownerId, ownerName, guild.joinedTimestamp, timestamp]
+            'INSERT INTO `servers` values (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [helpId, guild.id, guild.name, invite ? invite : '', guild.ownerId, ownerName, guild.joinedTimestamp, timestamp, guild.shardId]
         );
     } else connection.execute(
-        'UPDATE `servers` SET `serverName` = ?, `inviteId` = ?, `ownerId` = ?, `ownerName` = ?, `latestCommandTimestamp` = ? WHERE `serverId` = ?',
-        [guild.name, invite ? invite : '', guild.ownerId, ownerName, timestamp, guild.id]
+        'UPDATE `servers` SET `serverName` = ?, `inviteId` = ?, `ownerId` = ?, `ownerName` = ?, `latestCommandTimestamp` = ?, `shardId` = ? WHERE `serverId` = ?',
+        [guild.name, invite ? invite : '', guild.ownerId, ownerName, timestamp, guild.shardId, guild.id]
     );
 }
 async function existsHelpId(helpId) {
