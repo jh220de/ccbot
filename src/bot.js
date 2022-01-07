@@ -63,9 +63,11 @@ Error-ID: **${errorId}**`
     }
 });
 client.on('guildCreate', async guild => {
+    if(!active) return;
     updateEntrys(guild);
 });
 client.on('guildDelete', async guild => {
+    if(!active) return;
     connection.execute('DELETE FROM `servers` WHERE `serverId` = ?', [guild.id]);
     connection.execute('DELETE FROM `settings` WHERE `serverId` = ?', [guild.id]);
     connection.execute('DELETE FROM `errors` WHERE `serverId` = ?', [guild.id]);
