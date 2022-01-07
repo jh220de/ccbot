@@ -7,7 +7,7 @@ const { token, sql, adminCommand, delay } = require('../config.json');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 client.commands = new Collection();
-var active = false;
+var active = true;
 var connection;
 const commandFiles = fs.readdirSync('./src/commands').filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
@@ -178,9 +178,6 @@ async function setPermissions() {
 client.once('ready', async () => {
     setupMySQL();
     setPermissions();
-    await wait(delay);
-    console.log("Waiting done.");
-    active = true;
     setInterval(setActivity, 30000);
 });
 
