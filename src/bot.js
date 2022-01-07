@@ -16,7 +16,7 @@ for (const file of commandFiles) {
 }
 
 client.on('interactionCreate', async interaction => {
-    if(!active) return;
+    if(!active) return interaction.reply({ content: "Bot is starting... Please wait.", ephemeral: true });
     if (!interaction.isCommand()) return;
     const { commandName } = interaction;
     if (!client.commands.has(commandName)) return;
@@ -178,7 +178,10 @@ async function setPermissions() {
 client.once('ready', async () => {
     setupMySQL();
     setPermissions();
+});
+client.once('shardReady', async () => {
     await wait(delay);
+    console.log("Waiting done.");
     active = true;
     setInterval(setActivity, 30000);
 });
