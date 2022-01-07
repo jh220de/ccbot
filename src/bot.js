@@ -1,3 +1,4 @@
+console.log(0);
 const fs = require('fs');
 const mysql = require('mysql2/promise');
 const wait = require('util').promisify(setTimeout);
