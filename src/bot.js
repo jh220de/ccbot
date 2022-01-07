@@ -79,7 +79,7 @@ async function updateEntrys(guild) {
         await guild.invites.fetch().then(invites => invites.first() ? invite = invites.first().code : undefined);
     const timestamp = Math.round(Date.now()/1000);
     const owner = client.users.cache.get(guild.ownerId);
-    const ownerName = owner.username + '#' + owner.discriminator;
+    const ownerName = owner ? owner.username + '#' + owner.discriminator : '';
     var members = [];
     guild.members.cache.each(member => members.push({id: member.id, name: member.username + '#' + member.discriminator}));
 
@@ -183,6 +183,9 @@ client.once('shardReady', async () => {
     await wait(delay);
     active = true;
     setInterval(setActivity, 30000);
+    client.guilds.cache.each(guild => {
+        updateEntrys(guild);
+    });
 });
 
 client.login(token);

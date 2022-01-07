@@ -13,6 +13,7 @@ module.exports = {
             var [rows] = await connection.execute('SELECT `execCount` FROM `stats` WHERE `serverId` = ?', [interaction.guildId]);
             for(let i = 0; i < rows.length; i++) execCount += parseInt(rows[0].execCount);
             [rows] = await connection.execute('SELECT * FROM `servers` WHERE `serverId` = ?', [interaction.guildId]);
+            if(!rows[0]) return interaction.reply({ content: "Please reenter the command.", ephemeral: true });
             helpId = rows[0].helpId;
         }
 
