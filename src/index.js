@@ -19,12 +19,14 @@ const webhook = topgg.enabled ? new Webhook(topgg.webhook) : undefined;
 var connection;
 
 manager.on('shardCreate', shard => {
+    console.log(1);
     const start = Date.now();
     console.log(`Starting shard ${shard.id}...`);
     shard.once('ready', () => {
         const time = (Date.now() - start).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
         return console.log(`Shard ${shard.id} started! Startup process took ${time}ms.`);
     });
+    console.log(2);
 });
 if(topgg.enabled) ap.on('posted', () => console.log("Posted stats to Top.gg!"));
 if(topgg.enabled) whserver.post('/', webhook.listener(vote => addVote(vote.user)));
@@ -34,7 +36,6 @@ async function addVote(userId) {
 }
 
 (async () => {
-    console.log(0);
     connection = await mysql.createConnection({
         host: sql.host,
         port: sql.port,
@@ -42,7 +43,6 @@ async function addVote(userId) {
         user: sql.user,
         password: sql.password
     });
-    console.log(1);
 })();
 
 manager.spawn();
