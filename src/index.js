@@ -12,12 +12,11 @@ const manager = new ShardingManager('./src/bot.js', {
     spawnTimeout: -1,
     respawn: true
 });
-console.log(1);
+
 const whserver = topgg.enabled ? express() : undefined;
 const ap = topgg.enabled ? AutoPoster(topgg.token, manager) : undefined;
 const webhook = topgg.enabled ? new Webhook(topgg.webhook) : undefined;
 var connection;
-console.log(2);
 
 manager.on('shardCreate', shard => {
     const start = Date.now();
@@ -27,10 +26,8 @@ manager.on('shardCreate', shard => {
         return console.log(`Shard ${shard.id} started! Startup process took ${time}ms.`);
     });
 });
-console.log(3);
 if(topgg.enabled) ap.on('posted', () => console.log("Posted stats to Top.gg!"));
 if(topgg.enabled) whserver.post('/', webhook.listener(vote => addVote(vote.user)));
-console.log(4);
 
 async function addVote(userId) {
     connection.execute('INSERT INTO `votes` values (?, ?)', [userId, Math.round(Date.now()/1000)]);
@@ -46,7 +43,5 @@ async function addVote(userId) {
     });
 })();
 
-manager.spawn();
-console.log(5);
+manager.spawn().catch(console.error);
 if(topgg.enabled) whserver.listen(1337);
-console.log(6);
