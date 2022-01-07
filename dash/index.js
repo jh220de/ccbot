@@ -22,19 +22,16 @@ async function existsServer(serverId) {
     return rows[0] ? true : false;
 }
 async function getTotalExecCount(serverId) {
-    var count = 0;
-    var rows;
-    if(serverId) [rows] = await connection.execute('SELECT `execCount` FROM `stats` WHERE `serverId` = ?', [serverId]);
-    else [rows] = await connection.execute('SELECT `execCount` FROM `stats`');
-    for(let i = 0; i < rows.length; i++) count += parseInt(rows[0].execCount);
-    return count;
+    if(serverId) [rows] = await connection.execute('SELECT SUM(`execCount`) FROM `stats` WHERE `serverId` = ?', [serverId]);
+    else [rows] = await connection.execute('SELECT SUM(`execCount`) FROM `stats`');
+    return rows[0];
 }
 async function getExecCountData(serverId) {
     var data = [];
     var rows;
     if(serverId) [rows] = await connection.execute('SELECT `execCount`, `timestamp`, `command` FROM `stats` WHERE `serverId` = ?', [serverId]);
     else [rows] = await connection.execute('SELECT `execCount`, `timestamp`, `command` FROM `stats`');
-    for(let i = 0; i < rows.length; i++) data.push({ count: parseInt(rows[i].execCount), unix: rows[i].timestamp, cmd: rows[i].command.split(' ')[0] });
+    for(let i = 0; i < rows.length; i++) data.push({ count: rows[i].execCount, unix: rows[i].timestamp, cmd: rows[i].command.split(' ')[0] });
     return data;
 }
 
