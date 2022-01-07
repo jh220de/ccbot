@@ -34,6 +34,7 @@ async function addVote(userId) {
 }
 
 (async () => {
+    console.log(0);
     connection = await mysql.createConnection({
         host: sql.host,
         port: sql.port,
@@ -41,6 +42,7 @@ async function addVote(userId) {
         user: sql.user,
         password: sql.password
     });
+    console.log(1);
 })();
 
 manager.spawn();

@@ -1,11 +1,10 @@
-console.log(0);
 const fs = require('fs');
 const mysql = require('mysql2/promise');
 const wait = require('util').promisify(setTimeout);
 
 const { Client, Collection, Intents } = require('discord.js');
 const { token, sql, adminCommand, delay } = require('../config.json');
-console.log(1);
+
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 client.commands = new Collection();
 var active = true;
@@ -15,7 +14,6 @@ for (const file of commandFiles) {
     const command = require(`./commands/${file}`);
     client.commands.set(command.data.name, command);
 }
-console.log(2);
 
 client.on('interactionCreate', async interaction => {
     if(!active) return;
@@ -63,7 +61,6 @@ Error-ID: **${errorId}**`
         );
     }
 });
-console.log(3);
 client.on('guildCreate', async guild => {
     if(!active) return;
     updateEntrys(guild);
@@ -75,7 +72,7 @@ client.on('guildDelete', async guild => {
     connection.execute('DELETE FROM `errors` WHERE `serverId` = ?', [guild.id]);
     connection.execute('DELETE FROM `autoclear` WHERE `serverId` = ?', [guild.id]);
 });
-console.log(4);
+
 async function updateEntrys(guild) {
     var invite;
     if(guild.me.permissions.has('MANAGE_GUILD')) 
@@ -114,7 +111,7 @@ async function existsErrorId(errorId) {
     if(rows[0]) return true;
     else return false;
 }
-console.log(5);
+
 async function setupMySQL() {
     connection = await mysql.createConnection({
         host: sql.host,
@@ -158,7 +155,7 @@ async function setActivity() {
         client.user.setActivity(`/clear | ${display}`, { type: 'WATCHING' });
     });
 }
-console.log(6);
+
 async function setPermissions() {
     if(!client.application?.owner) await client.application?.fetch();
     if(!client.guilds.cache.get(adminCommand.serverId)) return;
@@ -183,6 +180,5 @@ client.once('ready', async () => {
     setPermissions();
     setInterval(setActivity, 30000);
 });
-console.log(7);
+
 client.login(token);
-console.log(8);
