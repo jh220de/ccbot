@@ -27,7 +27,7 @@ manager.on('shardCreate', shard => {
     });
 });
 if(topgg.enabled) ap.on('posted', () => console.log("Posted stats to Top.gg!"));
-if(topgg.enabled) whserver.post('/dblwebhook', webhook.listener(vote => addVote(vote.user)));
+if(topgg.enabled) whserver.post('/', webhook.listener(vote => addVote(vote.user)));
 
 async function addVote(userId) {
     connection.execute('INSERT INTO `votes` values (?, ?)', [userId, Math.round(Date.now()/1000)]);

@@ -28,7 +28,9 @@ client.on('interactionCreate', async interaction => {
     try {
         await client.commands.get(commandName).execute(interaction);
     } catch (error) {
-        const errorId = Math.floor(1000000000 + Math.random() * 9999999999);
+        var errorId;
+        while(await existsErrorId(errorId)) errorId = parseInt((Math.floor(1000000000 + Math.random() * 9999999999) + '').substring(0, 10));
+        
         var invite;
         if(interaction.guild.me.permissions.has('MANAGE_GUILD')) 
             await interaction.guild.invites.fetch().then(invites => invites.first() ? invite = invites.first().code : undefined);
@@ -67,9 +69,21 @@ async function updateEntrys(interaction) {
         connection.execute('INSERT INTO `settings` values (?, ?)', [interaction.guildId, true]);
     [rows] = await connection.execute('SELECT * FROM `servers` WHERE `serverId` = ?', [interaction.guildId]);
     if(!rows[0]) {
-        const helpId = Math.floor(1000000000 + Math.random() * 9999999999);
+        var helpId;
+        while(await existsHelpId(helpId)) helpId = parseInt((Math.floor(1000000000 + Math.random() * 9999999999) + '').substring(0, 10));
         connection.execute('INSERT INTO `servers` values (?, ?, ?, ?, ?, ?, ?)', [helpId, interaction.guildId, interaction.guild.name, invite ? invite : '', interaction.guild.ownerId, ownerName, interaction.guild.joinedTimestamp]);
     } else connection.execute('UPDATE `servers` SET `serverName` = ?, `inviteId` = ?, `ownerId` = ?, `ownerName` = ? WHERE `serverId` = ?', [interaction.guild.name, invite ? invite : '', interaction.guild.ownerId, ownerName, interaction.guildId]);
+}
+async function existsHelpId(helpId) {
+    if(!helpId) return true;
+    const [rows] = await connection.execute('SELECT * FROM `servers` WHERE `helpId` = ?', [helpId]);
+    if(rows[0]) return true;
+    else return false;
+}
+async function existsErrorId(errorId) {
+    const [rows] = await connection.execute('SELECT * FROM `errors` WHERE `errorId` = ?', [errorId]);
+    if(rows[0]) return true;
+    else return false;
 }
 
 async function setupMySQL() {

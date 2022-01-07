@@ -20,7 +20,7 @@ module.exports = {
         var duration = interaction.options.getInteger('duration');
         if(!duration) duration = 3;
 
-        if(!mode) return; // TODO
-        if(!voted) return; // TODO
+        if(!mode) return; // remove active mode
+        if(!voted) return;
     },
 };
