@@ -13,9 +13,9 @@ const manager = new ShardingManager('./src/bot.js', {
     respawn: true
 });
 
-const whserver = topgg.enabled ? express() : undefined;
-const ap = topgg.enabled ? AutoPoster(topgg.token, manager) : undefined;
-const webhook = topgg.enabled ? new Webhook(topgg.webhook) : undefined;
+const whserver = topgg.enabled ? express() : null;
+const ap = topgg.enabled ? AutoPoster(topgg.token, manager) : null;
+const webhook = topgg.enabled ? new Webhook(topgg.webhook) : null;
 var connection;
 
 manager.on('shardCreate', shard => {

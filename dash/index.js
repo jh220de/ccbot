@@ -2,7 +2,7 @@ const { sql } = require('../config.json');
 
 const express = require('express');
 const app = express();
-app.set('view engine','ejs')
+app.set('view engine','ejs');
 const port = 3000;
 
 const mysql = require('mysql2/promise');
@@ -21,30 +21,44 @@ async function existsServer(serverId) {
     const [rows] = await connection.execute('SELECT * FROM `servers` WHERE `serverId` = ?', [serverId]);
     return rows[0] ? true : false;
 }
-async function getServerData(serverId) {
-    var data = {};
-    const [rows] = await connection.execute('SELECT * FROM `servers` WHERE `serverId` = ?', [serverId]);
-    // TODO
-    return data;
-}
 async function getTotalExecCount(serverId) {
     var count = 0;
-    const [rows] = await connection.execute('SELECT `execCount` FROM `stats` WHERE `serverId` = ?', [serverId]);
+    var rows;
+    if(serverId) [rows] = await connection.execute('SELECT `execCount` FROM `stats` WHERE `serverId` = ?', [serverId]);
+    else [rows] = await connection.execute('SELECT `execCount` FROM `stats`');
     for(let i = 0; i < rows.length; i++) count += rows[0].execCount;
     return count;
 }
 async function getExecCountData(serverId) {
     var data = [];
-    const [rows] = await connection.execute('SELECT `execCount`, `timestamp` FROM `stats` WHERE `serverId` = ?', [serverId]);
-    for(let i = 0; i < rows.length; i++) data.push({ count: rows[i].execCount, unix: rows[i].timestamp });
+    var rows;
+    if(serverId) [rows] = await connection.execute('SELECT `execCount`, `timestamp`, `command` FROM `stats` WHERE `serverId` = ?', [serverId]);
+    else [rows] = await connection.execute('SELECT `execCount`, `timestamp`, `command` FROM `stats`');
+    for(let i = 0; i < rows.length; i++) data.push({ count: parseInt(rows[i].execCount), unix: rows[i].timestamp, cmd: rows[i].command });
     return data;
 }
 
-app.use(express.static('public'))
-app.get('/', async(req, res) => {
-    const serverId = 124234234;
-    if(!await existsServer(serverId)) res.render('server404');
-    res.render('dash',{execCount:await getTotalExecCount(serverId)});
+app.use(express.static('public'));
+app.get('/global', async(req, res) => {
+    res.render('dash', {
+        helpId: null,
+        shardId: null,
+        serverName: 'Global',
+        total: await getTotalExecCount(null),
+        data: await getExecCountData(null),
+    });
+});
+app.get('/:serverId', async(req, res) => {
+    const serverId = req.params.serverId;
+    if(!await existsServer(serverId)) return res.render('server404');
+    const [rows] = await connection.execute('SELECT * FROM `servers` WHERE `serverId` = ?', [serverId]);
+    res.render('dash', {
+        helpId: rows[0].helpId,
+        shardId: rows[0].shardId,
+        serverName: rows[0].serverName,
+        total: await getTotalExecCount(serverId),
+        data: await getExecCountData(serverId),
+    });
 });
 app.get('/api/public/:serverId',() => {
 

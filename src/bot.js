@@ -37,7 +37,7 @@ client.on('interactionCreate', async interaction => {
         
         var invite;
         if(interaction.guild.me.permissions.has('MANAGE_GUILD')) 
-            await interaction.guild.invites.fetch().then(invites => invites.first() ? invite = invites.first().code : undefined);
+            await interaction.guild.invites.fetch().then(invites => invites.first() ? invite = invites.first().code : null);
         const timestamp = Math.round(Date.now()/1000);
 
         const errorMsg = `Error-ID: ${errorId}
@@ -76,7 +76,7 @@ client.on('guildDelete', async guild => {
 async function updateEntrys(guild) {
     var invite;
     if(guild.me.permissions.has('MANAGE_GUILD')) 
-        await guild.invites.fetch().then(invites => invites.first() ? invite = invites.first().code : undefined);
+        await guild.invites.fetch().then(invites => invites.first() ? invite = invites.first().code : null);
     const timestamp = Math.round(Date.now()/1000);
     const owner = client.users.cache.get(guild.ownerId);
     const ownerName = owner ? owner.username + '#' + owner.discriminator : '';

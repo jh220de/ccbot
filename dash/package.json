@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "prod": "node .",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "tw": "npx tailwindcss -i ./twbase.css -o ./public/css/tw.css --watch"
   },
   "author": "JH220",
   "dependencies": {
