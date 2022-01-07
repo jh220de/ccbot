@@ -179,7 +179,7 @@ client.once('ready', () => {
     setupMySQL();
     setPermissions();
 });
-client.once('shardReady', () => {
+client.once('shardReady', async () => {
     await wait(delay);
     active = true;
     setInterval(setActivity, 30000);
