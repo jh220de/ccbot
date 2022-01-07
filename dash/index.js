@@ -24,7 +24,8 @@ async function existsServer(serverId) {
 async function getTotalExecCount(serverId) {
     if(serverId) [rows] = await connection.execute('SELECT SUM(`execCount`) FROM `stats` WHERE `serverId` = ?', [serverId]);
     else [rows] = await connection.execute('SELECT SUM(`execCount`) FROM `stats`');
-    return rows[0];
+    console.log(rows);
+    return rows[0]['SUM(`execCount`)'];
 }
 async function getExecCountData(serverId) {
     var data = [];
