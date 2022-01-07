@@ -40,7 +40,8 @@ module.exports = {
             if (user) messages = messages.filter(message => message.author.id == user.id);
 
             interaction.channel.bulkDelete(messages, true).then(messages => {
-                return interaction.editReply(`Deleted ${messages.size} message${messages.size != 1 ? 's' : ''} in this channel${user ? ` from ${user}` : ''}.`);
+                interaction.editReply(`Deleted ${messages.size} message${messages.size != 1 ? 's' : ''} in this channel${user ? ` from ${user}` : ''}.`);
+                connection.execute('UPDATE `stats` SET `execCount` = ? WHERE `interactionId` = ?', [messages.size, interaction.id]);
             });
         });
     },

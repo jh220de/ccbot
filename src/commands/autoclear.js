@@ -16,11 +16,16 @@ module.exports = {
             .addChoice('Only messages without links', 'nonlinks')
         ),
     async execute(interaction) {
+        const { connection } = require('../bot');
         var mode = interaction.options.getString('mode');
         var duration = interaction.options.getInteger('duration');
         if(!duration) duration = 3;
 
-        if(!mode) return; // remove active mode
+        if(!mode) {
+            const [rows] = await connection.execute('SELECT * FROM `autoclear` WHERE `channelId` = ?', [interaction.channelId]);
+            if(!rows[0]) return interaction.reply({ content: "There is no autoclear function in this channel yet.", ephemeral: true });
+            
+        } // remove active mode
         if(!voted) return;
     },
 };

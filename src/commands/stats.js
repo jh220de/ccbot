@@ -7,7 +7,14 @@ module.exports = {
         .setDescription("Sends the bot's stats 📈"),
     async execute(interaction) {
         const { connection } = require('../bot');
-        const [rows] = await connection.execute('SELECT * FROM `servers` WHERE `serverId` = ?', [interaction.guildId]);
+        var execCount = 0;
+        var helpId;
+        if(interaction.guild != null) {
+            var [rows] = await connection.execute('SELECT `execCount` FROM `stats` WHERE `serverId` = ?', [interaction.guildId]);
+            for(let i = 0; i < rows.length; i++) execCount += parseInt(rows[0].execCount);
+            [rows] = await connection.execute('SELECT * FROM `servers` WHERE `serverId` = ?', [interaction.guildId]);
+            helpId = rows[0].helpId;
+        }
 
         const promises = [
             interaction.client.shard.fetchClientValues('guilds.cache.size'),
@@ -26,7 +33,8 @@ module.exports = {
 **Members:** ${(members - servers).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")}
 **Ping:** ${Math.round(interaction.client.ws.ping)}ms
 ${interaction.guild != null ? `**Shard:** ${interaction.guild.shardId + 1}
-**Help-ID:** ${rows[0].helpId}\n` : ''}
+**Help-ID:** ${helpId}
+**Total cleared messages on this server:** ${execCount}\n` : ''}
 If you want to invite this bot to your server, you can do it via the following link: http://jh220.de/ccbot
 *Note:* If you need help with the bot, please visit our Discord: http://jh220.de/cc/help
             `);

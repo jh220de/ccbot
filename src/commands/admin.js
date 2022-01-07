@@ -33,7 +33,6 @@ module.exports = {
     async execute(interaction) {
         const { adminCommand } = require('../../config.json');
         const { connection } = require ('../bot');
-        if(interaction.user.id != adminCommand.ownerId) return;
         var rows;
         var result;
         
@@ -75,7 +74,8 @@ Error: ${result.error}`);
                 return interaction.reply(`**Help-ID: ${result.helpId}**
 Server: "${result.serverName}" (${result.serverId})${result.inviteId != '' ? `\nServer invite: discord.gg/${result.inviteId}` : ''}
 Owner: "${result.ownerName}" <@${result.ownerId}>
-Joined Timestamp <t:${Math.round(result.joinedTimestamp/1000)}:R>`);
+Joined Timestamp <t:${Math.round(result.joinedTimestamp/1000)}:R>
+Latest command Timestamp <t:${result.latestCommandTimestamp}:R>`);
             case 'whitelist':
                 const user = interaction.options.getUser('user');
                 [rows] = await connection.execute('SELECT * FROM `votes_whitelisted` WHERE `userId` = ?', [user.id]);

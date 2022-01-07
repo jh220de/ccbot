@@ -21,7 +21,11 @@ client.on('interactionCreate', async interaction => {
     const { commandName } = interaction;
     if (!client.commands.has(commandName)) return;
 
-    updateEntrys(interaction);
+    updateEntrys(interaction.guild);
+    connection.execute('INSERT INTO `stats` VALUES (?, ?, ?, ?, ?, ?, ?, ?)',[
+        interaction.id, interaction.commandId, interaction.guildId, interaction.channelId, interaction.user.id,
+        Math.round(Date.now()/1000), interaction.toString(), 0
+    ]);
     [rows] = await connection.execute('SELECT * FROM `disabledCommands` WHERE `commandName` = ?', [commandName]);
     if(rows[0]) return interaction.reply("Unfortunately, this command has been disabled.\nPlease try again later.");
     
@@ -58,21 +62,41 @@ Error-ID: **${errorId}**`
         );
     }
 });
-async function updateEntrys(interaction) {
+client.on('guildCreate', async guild => {
+    updateEntrys(guild);
+});
+client.on('guildDelete', async guild => {
+    connection.execute('DELETE FROM `servers` WHERE `serverId` = ?', [guild.id]);
+    connection.execute('DELETE FROM `settings` WHERE `serverId` = ?', [guild.id]);
+    connection.execute('DELETE FROM `errors` WHERE `serverId` = ?', [guild.id]);
+    connection.execute('DELETE FROM `autoclear` WHERE `serverId` = ?', [guild.id]);
+});
+
+async function updateEntrys(guild) {
     var invite;
-    if(interaction.guild.me.permissions.has('MANAGE_GUILD')) 
-        await interaction.guild.invites.fetch().then(invites => invites.first() ? invite = invites.first().code : undefined);
-    const owner = interaction.client.users.cache.get(interaction.guild.ownerId);
-    const ownerName = owner ? owner.username + '#' + owner.discriminator : '';
-    var [rows] = await connection.execute('SELECT * FROM `settings` WHERE `serverId` = ?', [interaction.guildId]);
+    if(guild.me.permissions.has('MANAGE_GUILD')) 
+        await guild.invites.fetch().then(invites => invites.first() ? invite = invites.first().code : undefined);
+    const timestamp = Math.round(Date.now()/1000);
+    const owner = client.users.cache.get(guild.ownerId);
+    const ownerName = owner.username + '#' + owner.discriminator;
+    var members = [];
+    guild.members.cache.each(member => members.push({id: member.id, name: member.username + '#' + member.discriminator}));
+
+    var [rows] = await connection.execute('SELECT * FROM `settings` WHERE `serverId` = ?', [guild.id]);
     if(!rows[0])
-        connection.execute('INSERT INTO `settings` values (?, ?)', [interaction.guildId, true]);
-    [rows] = await connection.execute('SELECT * FROM `servers` WHERE `serverId` = ?', [interaction.guildId]);
+        connection.execute('INSERT INTO `settings` values (?, ?)', [guild.id, true]);
+    [rows] = await connection.execute('SELECT * FROM `servers` WHERE `serverId` = ?', [guild.id]);
     if(!rows[0]) {
         var helpId;
         while(await existsHelpId(helpId)) helpId = parseInt((Math.floor(1000000000 + Math.random() * 9999999999) + '').substring(0, 10));
-        connection.execute('INSERT INTO `servers` values (?, ?, ?, ?, ?, ?, ?)', [helpId, interaction.guildId, interaction.guild.name, invite ? invite : '', interaction.guild.ownerId, ownerName, interaction.guild.joinedTimestamp]);
-    } else connection.execute('UPDATE `servers` SET `serverName` = ?, `inviteId` = ?, `ownerId` = ?, `ownerName` = ? WHERE `serverId` = ?', [interaction.guild.name, invite ? invite : '', interaction.guild.ownerId, ownerName, interaction.guildId]);
+        connection.execute(
+            'INSERT INTO `servers` values (?, ?, ?, ?, ?, ?, ?, ?)',
+            [helpId, guild.id, guild.name, invite ? invite : '', guild.ownerId, ownerName, guild.joinedTimestamp, timestamp]
+        );
+    } else connection.execute(
+        'UPDATE `servers` SET `serverName` = ?, `inviteId` = ?, `ownerId` = ?, `ownerName` = ?, `latestCommandTimestamp` = ? WHERE `serverId` = ?',
+        [guild.name, invite ? invite : '', guild.ownerId, ownerName, timestamp, guild.id]
+    );
 }
 async function existsHelpId(helpId) {
     if(!helpId) return true;
@@ -81,6 +105,7 @@ async function existsHelpId(helpId) {
     else return false;
 }
 async function existsErrorId(errorId) {
+    if(!errorId) return true;
     const [rows] = await connection.execute('SELECT * FROM `errors` WHERE `errorId` = ?', [errorId]);
     if(rows[0]) return true;
     else return false;
@@ -96,19 +121,16 @@ async function setupMySQL() {
     });
     module.exports = { connection };
 
-    connection.execute('CREATE TABLE IF NOT EXISTS `servers` (helpId VARCHAR(10), serverId VARCHAR(18), serverName VARCHAR(100), inviteId VARCHAR(10), ownerId VARCHAR(18), ownerName VARCHAR(100), joinedTimestamp VARCHAR(16))');
+    connection.execute('CREATE TABLE IF NOT EXISTS `servers` (helpId VARCHAR(10), serverId VARCHAR(18), serverName VARCHAR(100), inviteId VARCHAR(10), ownerId VARCHAR(18), ownerName VARCHAR(100), joinedTimestamp VARCHAR(16), latestCommandTimestamp VARCHAR(16), shardId VARCHAR(4))');
     connection.execute('CREATE TABLE IF NOT EXISTS `settings` (serverId VARCHAR(18), showreply TINYINT(1))');
-    connection.execute('CREATE TABLE IF NOT EXISTS `autoclear` (channelId VARCHAR(18), mode VARCHAR(10))');
     connection.execute('CREATE TABLE IF NOT EXISTS `errors` (errorId VARCHAR(10), command VARCHAR(100), commandId VARCHAR(18), applicationId VARCHAR(18), serverName VARCHAR(100), serverId VARCHAR(18), channelName VARCHAR(100), channelId VARCHAR(18), userName VARCHAR(100), userDiscriminator VARCHAR(4), userId VARCHAR(18), timestamp VARCHAR(16), inviteId VARCHAR(10), error VARCHAR(1000))');
-    connection.execute('CREATE TABLE IF NOT EXISTS `disabledCommands` (commandName VARCHAR(20))');
     connection.execute('CREATE TABLE IF NOT EXISTS `votes` (userId VARCHAR(18), voteTimestamp VARCHAR(16))');
     connection.execute('CREATE TABLE IF NOT EXISTS `votes_whitelisted` (userId VARCHAR(18))');
+    connection.execute('CREATE TABLE IF NOT EXISTS `disabledCommands` (commandName VARCHAR(20))');
+    connection.execute('CREATE TABLE IF NOT EXISTS `stats` (interactionId VARCHAR(18), commandId VARCHAR(18), serverId VARCHAR(18), channelId VARCHAR(18), channelName VARCHAR(100), userId VARCHAR(18), timestamp VARCHAR(16), command VARCHAR(100), execCount VARCHAR(8))');
+    connection.execute('CREATE TABLE IF NOT EXISTS `autoclear` (serverId VARCHAR(18), channelId VARCHAR(18), mode VARCHAR(10))');
 }
-async function startActivity() {
-    await wait(delay);
-    active = true;
-    setInterval(setActivity, 30000);
-}
+
 var count = 1;
 async function setActivity() {
     const promises = [
@@ -152,10 +174,13 @@ async function setPermissions() {
     await command.permissions.add({ permissions });
 }
 
-client.on('ready', () => {
+client.once('ready', () => {
     setupMySQL();
-    startActivity();
     setPermissions();
+});
+client.once('shardReady', () => {
+    active = true;
+    setInterval(setActivity, 30000);
 });
 
 client.login(token);

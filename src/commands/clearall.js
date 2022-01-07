@@ -33,7 +33,8 @@ module.exports = {
         interaction.channel.delete();
         interaction.channel.clone().then(channel => {
             if(channel.permissionsFor(interaction.guild.me).has('SEND_MESSAGES'))
-                if(!ephemeral) return channel.send(`Deleted all messages in this channel by ${interaction.user}.`);
+                if(!ephemeral) channel.send(`Deleted all messages in this channel by ${interaction.user}.`);
         });
+        connection.execute('UPDATE `stats` SET `execCount` = ? WHERE `interactionId` = ?', [100, interaction.id]);
     },
 };
