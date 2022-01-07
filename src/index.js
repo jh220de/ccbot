@@ -5,14 +5,13 @@ const { AutoPoster } = require('topgg-autoposter');
 const { Webhook } = require('@top-gg/sdk');
 const express = require('express');
 const mysql = require('mysql2/promise');
-console.log(1);
+
 const manager = new ShardingManager('./src/bot.js', {
     totalShards: 'auto',
     token: token,
     spawnTimeout: -1,
     respawn: true
 });
-console.log(2);
 
 const whserver = topgg.enabled ? express() : undefined;
 const ap = topgg.enabled ? AutoPoster(topgg.token, manager) : undefined;
@@ -35,7 +34,6 @@ async function addVote(userId) {
 }
 
 (async () => {
-    console.log(3);
     connection = await mysql.createConnection({
         host: sql.host,
         port: sql.port,
@@ -43,8 +41,8 @@ async function addVote(userId) {
         user: sql.user,
         password: sql.password
     });
-    console.log(4);
 })();
 
 manager.spawn();
 if(topgg.enabled) whserver.listen(1337);
+console.log(1);
