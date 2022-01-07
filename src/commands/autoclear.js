@@ -16,6 +16,7 @@ module.exports = {
             .addChoice('Only messages without links', 'nonlinks')
         ),
     async execute(interaction) {
+        return;
         const { connection } = require('../bot');
         var mode = interaction.options.getString('mode');
         var duration = interaction.options.getInteger('duration');

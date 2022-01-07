@@ -22,8 +22,8 @@ client.on('interactionCreate', async interaction => {
     if (!client.commands.has(commandName)) return;
 
     updateEntrys(interaction.guild);
-    connection.execute('INSERT INTO `stats` VALUES (?, ?, ?, ?, ?, ?, ?, ?)',[
-        interaction.id, interaction.commandId, interaction.guildId, interaction.channelId, interaction.user.id,
+    connection.execute('INSERT INTO `stats` VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',[
+        interaction.id, interaction.commandId, interaction.guildId, interaction.channelId, interaction.channel.name, interaction.user.id,
         Math.round(Date.now()/1000), interaction.toString(), 0
     ]);
     [rows] = await connection.execute('SELECT * FROM `disabledCommands` WHERE `commandName` = ?', [commandName]);
@@ -51,7 +51,6 @@ Please report it to: https://github.com/JH220/discord-clearchatbot/issues/new?ti
 Error-ID: **${errorId}**`
 
         console.error(errorMsg);
-        if(!interaction) return console.log("break");;
         if(interaction.deferred || interaction.replied) interaction.editReply(userMsg);
         else interaction.reply({content: userMsg, ephemeral: true});
 
@@ -130,7 +129,7 @@ async function setupMySQL() {
     connection.execute('CREATE TABLE IF NOT EXISTS `votes_whitelisted` (userId VARCHAR(18))');
     connection.execute('CREATE TABLE IF NOT EXISTS `disabledCommands` (commandName VARCHAR(20))');
     connection.execute('CREATE TABLE IF NOT EXISTS `stats` (interactionId VARCHAR(18), commandId VARCHAR(18), serverId VARCHAR(18), channelId VARCHAR(18), channelName VARCHAR(100), userId VARCHAR(18), timestamp VARCHAR(16), command VARCHAR(100), execCount VARCHAR(8))');
-    connection.execute('CREATE TABLE IF NOT EXISTS `autoclear` (serverId VARCHAR(18), channelId VARCHAR(18), mode VARCHAR(10))');
+    //connection.execute('CREATE TABLE IF NOT EXISTS `autoclear` (serverId VARCHAR(18), channelId VARCHAR(18), mode VARCHAR(10))');
 }
 
 var count = 1;
@@ -181,6 +180,7 @@ client.once('ready', () => {
     setPermissions();
 });
 client.once('shardReady', () => {
+    await wait(delay);
     active = true;
     setInterval(setActivity, 30000);
 });
