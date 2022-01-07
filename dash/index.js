@@ -26,7 +26,7 @@ async function getTotalExecCount(serverId) {
     var rows;
     if(serverId) [rows] = await connection.execute('SELECT `execCount` FROM `stats` WHERE `serverId` = ?', [serverId]);
     else [rows] = await connection.execute('SELECT `execCount` FROM `stats`');
-    for(let i = 0; i < rows.length; i++) count += rows[0].execCount;
+    for(let i = 0; i < rows.length; i++) count += parseInt(rows[0].execCount);
     return count;
 }
 async function getExecCountData(serverId) {
@@ -34,7 +34,7 @@ async function getExecCountData(serverId) {
     var rows;
     if(serverId) [rows] = await connection.execute('SELECT `execCount`, `timestamp`, `command` FROM `stats` WHERE `serverId` = ?', [serverId]);
     else [rows] = await connection.execute('SELECT `execCount`, `timestamp`, `command` FROM `stats`');
-    for(let i = 0; i < rows.length; i++) data.push({ count: parseInt(rows[i].execCount), unix: rows[i].timestamp, cmd: rows[i].command });
+    for(let i = 0; i < rows.length; i++) data.push({ count: parseInt(rows[i].execCount), unix: rows[i].timestamp, cmd: rows[i].command.split(' ')[0] });
     return data;
 }
 

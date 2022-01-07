@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "prod": "node .",
-    "dev": "nodemon",
+    "dev": "nodemon -i dash/",
     "restart": "nodemon -x 'node . || touch src/index.js'",
     "register": "node src/register.js"
   },
