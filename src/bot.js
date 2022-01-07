@@ -181,6 +181,7 @@ client.once('ready', () => {
 });
 client.once('shardReady', async () => {
     await wait(delay);
+    console.log("Waiting done.");
     active = true;
     setInterval(setActivity, 30000);
     client.guilds.cache.each(guild => {
