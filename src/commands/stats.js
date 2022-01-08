@@ -13,7 +13,7 @@ module.exports = {
             var [rows] = await connection.execute('SELECT `execCount` FROM `stats` WHERE `serverId` = ?', [interaction.guildId]);
             for(let i = 0; i < rows.length; i++) execCount += parseInt(rows[0].execCount);
             [rows] = await connection.execute('SELECT * FROM `servers` WHERE `serverId` = ?', [interaction.guildId]);
-            if(!rows[0]) return interaction.reply({ content: "Please reenter the command.", ephemeral: true });
+            if(!rows[0]) return interaction.editReply("Please reenter the command.");
             helpId = rows[0].helpId;
         }
 
@@ -38,7 +38,7 @@ ${interaction.guild != null ? `**Shard:** ${interaction.guild.shardId + 1}
 If you want to invite this bot to your server, you can do it via the following link: http://jh220.de/ccbot
 *Note:* If you need help with the bot, please visit our Discord: http://jh220.de/cc/help
             `);
-            return interaction.reply({ embeds: [embed], ephemeral: true });
+            return interaction.editReply({ embeds: [embed] });
         });
     },
 };

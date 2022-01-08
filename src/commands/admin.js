@@ -42,9 +42,9 @@ module.exports = {
                 [rows] = await connection.execute('SELECT * FROM `errors` WHERE `errorId` = ?', [errorId]);
                 result = rows[0];
 
-                if(!result) return interaction.reply({ content: "The specified error does not exist.", ephemeral: true});
+                if(!result) return interaction.editReply("The specified error does not exist.");
                 
-                return interaction.reply(`**Error-ID: ${errorId}**
+                return interaction.editReply(`**Error-ID: ${errorId}**
 Executed command: "${result.command}" (${result.commandId}, ${result.applicationId})
 Executed at: "${result.serverName}" (${result.serverId}) in "#${result.channelName}" <#${result.channelId}>
 Executed by: ${result.userName}#${result.userDiscriminator} (<@${result.userId}>)
@@ -56,10 +56,10 @@ Error: ${result.error}`);
                 
                 if(rows[0]) {
                     await connection.execute('DELETE FROM `disabledCommands` WHERE `commandName` = ?', [command]);
-                    return interaction.reply(`The command ${command} was successfully enabled.`);
+                    return interaction.editReply(`The command ${command} was successfully enabled.`);
                 } else {
                     await connection.execute('INSERT INTO `disabledCommands` values (?)', [command]);
-                    return interaction.reply(`The command ${command} was successfully disabled.`);
+                    return interaction.editReply(`The command ${command} was successfully disabled.`);
                 }
             case 'help':
                 const helpId = interaction.options.getString('id');
@@ -67,11 +67,11 @@ Error: ${result.error}`);
                 if(!rows[0]) {
                     [rows] = await connection.execute('SELECT * FROM `servers` WHERE `serverId` = ?', [helpId]);
                     if(!rows[0])
-                        return interaction.reply({ content: "The specified help page does not exist.", ephemeral: true});
+                        return interaction.editReply("The specified help page does not exist.");
                 }
 
                 result = rows[0];
-                return interaction.reply(`**Help-ID: ${result.helpId}**
+                return interaction.editReply(`**Help-ID: ${result.helpId}**
 Server: "${result.serverName}" (${result.serverId})${result.inviteId != '' ? `\nServer invite: discord.gg/${result.inviteId}` : ''}
 Owner: "${result.ownerName}" <@${result.ownerId}>
 Joined Timestamp <t:${Math.round(result.joinedTimestamp/1000)}:R>
@@ -81,10 +81,10 @@ Latest command Timestamp <t:${result.latestCommandTimestamp}:R>`);
                 [rows] = await connection.execute('SELECT * FROM `votes_whitelisted` WHERE `userId` = ?', [user.id]);
                 if(!rows[0]) {
                     await connection.execute('INSERT INTO `votes_whitelisted` values (?)', [user.id]);
-                    return interaction.reply(`The user ${user} was whitelisted successfully.`);
+                    return interaction.editReply(`The user ${user} was whitelisted successfully.`);
                 } else {
                     await connection.execute('DELETE FROM `votes_whitelisted` WHERE `userId` = ?', [user.id]);
-                    return interaction.reply(`The user ${user} was removed from whitelist successfully.`);
+                    return interaction.editReply(`The user ${user} was removed from whitelist successfully.`);
                 }
         }
     },

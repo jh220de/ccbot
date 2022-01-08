@@ -13,7 +13,7 @@ module.exports = {
         ),
     async execute(interaction) {
         if (!interaction.channel.permissionsFor(interaction.member).has('ADMINISTRATOR'))
-            return interaction.reply({ content: "You do not have enough permissions to do this.", ephemeral: true });
+            return interaction.editReply("You do not have enough permissions to do this.");
         
         const { connection } = require('../bot');
         const [rows] = await connection.execute('SELECT * FROM `settings` WHERE `serverId` = ?', [interaction.guildId]);
@@ -24,13 +24,13 @@ module.exports = {
                     .setColor('00FFFF')
                     .setTitle("ClearChat-Bot Settings page")
                     .addField('showreply',(result.showreply != 0).toString());
-                return interaction.reply({ embeds: [embed], ephemeral: true });
+                return interaction.editReply({ embeds: [embed] });
             case 'showreply':
                 const current = result.showreply != 0;
                 const showreply = interaction.options.getBoolean('showreply');
-                if(current == showreply) return interaction.reply({ content: "Nothing changed." });
+                if(current == showreply) return interaction.editReply("Nothing changed.");
                 await connection.execute('UPDATE `settings` SET `showreply` = ? WHERE `serverId` = ?', [showreply ? 1 : 0, interaction.guildId]);
-                return interaction.reply({ content: `Showreply changed to ${showreply}.`, ephemeral: true });
+                return interaction.editReply(`Showreply changed to ${showreply}.`);
         }
     },
 };

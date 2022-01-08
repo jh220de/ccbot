@@ -16,6 +16,6 @@ We are glad about any support.
 Statistics on the number of servers and users can be found via "/stats".
 *Note:* If you need help with the bot, please visit our Discord: http://jh220.de/cc/help
             `);
-        return interaction.reply({ embeds: [embed], ephemeral: true });
+        return interaction.editReply({ embeds: [embed] });
     },
 };

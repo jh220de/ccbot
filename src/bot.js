@@ -16,15 +16,16 @@ for (const file of commandFiles) {
 }
 
 client.on('interactionCreate', async interaction => {
-    if(!active) return interaction.reply({ content: "Bot is starting... Please wait.", ephemeral: true });
     if (!interaction.isCommand()) return;
+    if(!active) return;
+    await interaction.deferReply({ ephemeral: true });
     const { commandName } = interaction;
     if (!client.commands.has(commandName)) return;
 
     updateEntrys(interaction.guild);
 
     [rows] = await connection.execute('SELECT * FROM `disabledCommands` WHERE `commandName` = ?', [commandName]);
-    if(rows[0]) return interaction.reply("Unfortunately, this command has been disabled.\nPlease try again later.");
+    if(rows[0]) return interaction.editReply("Unfortunately, this command has been disabled.\nPlease try again later.");
 
     connection.execute('INSERT INTO `stats` VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',[
         interaction.id, interaction.commandId, interaction.guildId, interaction.channelId, interaction.channel.name, interaction.user.id,
@@ -53,8 +54,7 @@ Please report it to: https://github.com/JH220/discord-clearchatbot/issues/new?ti
 Error-ID: **${errorId}**`
 
         console.error(errorMsg);
-        if(interaction.deferred || interaction.replied) interaction.editReply(userMsg);
-        else interaction.reply({content: userMsg, ephemeral: true});
+        interaction.editReply(userMsg);
 
         connection.execute(
             'INSERT INTO `errors` values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',

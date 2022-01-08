@@ -24,7 +24,7 @@ module.exports = {
 
         if(!mode) {
             const [rows] = await connection.execute('SELECT * FROM `autoclear` WHERE `channelId` = ?', [interaction.channelId]);
-            if(!rows[0]) return interaction.reply({ content: "There is no autoclear function in this channel yet.", ephemeral: true });
+            if(!rows[0]) return interaction.editReply("There is no autoclear function in this channel yet.");
             
         } // remove active mode
         if(!voted) return;

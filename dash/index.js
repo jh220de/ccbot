@@ -22,7 +22,21 @@ async function existsServer(serverId) {
     return rows[0] ? true : false;
 }
 async function getTotalExecCount(serverId) {
-    if(serverId) [rows] = await connection.execute('SELECT SUM(`execCount`) FROM `stats` WHERE `serverId` = ?', [serverId]);
+    const timestamp = Math.round(Date.now()/1000);
+    var rows;
+    if(serverId) {
+        [rows] = await connection.execute(`
+SELECT 
+COUNT(CASE WHEN 'command' LIKE '/admin%'),
+COUNT(CASE WHEN 'command' LIKE '/autoclear%'),
+COUNT(CASE WHEN 'command' LIKE '/clear%'),
+COUNT(CASE WHEN 'command' LIKE '/clearall%'),
+COUNT(CASE WHEN 'command' LIKE '/invite%'),
+COUNT(CASE WHEN 'command' LIKE '/settings%'),
+COUNT(CASE WHEN 'command' LIKE '/stats%')
+FROM 'stats' WHERE 'serverId' = ? BETWEEN ? AND ?;
+    `, [serverId, timestamp - 86400, timestamp]);
+    }
     else [rows] = await connection.execute('SELECT SUM(`execCount`) FROM `stats`');
     return rows[0]['SUM(`execCount`)'];
 }
