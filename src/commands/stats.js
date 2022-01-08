@@ -35,8 +35,9 @@ module.exports = {
 **Ping:** ${Math.round(interaction.client.ws.ping)}ms
 ${interaction.guild != null ? `**Shard:** ${interaction.guild.shardId + 1}
 **Help-ID:** ${helpId}${/***Total cleared messages on this server:** ${execCount}*/''}\n` : ''}
-If you want to invite this bot to your server, you can do it via the following link: http://jh220.de/ccbot
-*Note:* If you need help with the bot, please visit our Discord: http://jh220.de/cc/help
+If you want to invite this bot to your server, you can do it [via the following link](http://jh220.de/ccbot).
+*Note:* If you need help with the bot, [please visit our Discord](http://jh220.de/cc/help).
+This bot was created and is maintained by *[JH220#2155](https://jh220.de)*.
             `);
             return interaction.editReply({ embeds: [embed] });
         });

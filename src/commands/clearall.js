@@ -28,11 +28,11 @@ module.exports = {
         
         const { connection } = require('../bot');
         const [rows] = await connection.execute('SELECT * FROM `settings` WHERE `serverId` = ?', [interaction.guild.id]);
-        var showreply = rows[0] ? rows[0].showreply == 0 : false;
+        const showreply = rows[0] ? rows[0].showreply == 1 : false;
         interaction.channel.delete();
         interaction.channel.clone().then(channel => {
-            if(channel.permissionsFor(interaction.guild.me).has('SEND_MESSAGES'))
-                if(!showreply) channel.send(`Deleted all messages in this channel by ${interaction.user}.`);
+            if(channel.permissionsFor(interaction.guild.me).has('SEND_MESSAGES') && showreply)
+                channel.send(`Deleted all messages in this channel by ${interaction.user}.`);
         });
         connection.execute('UPDATE `stats` SET `execCount` = ? WHERE `interactionId` = ?', [100, interaction.id]);
     },

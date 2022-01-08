@@ -30,3 +30,7 @@ If you encounter any bugs, please [create an issue](https://github.com/JH220/dis
 ## Help, quickstart & information
 
 https://github.com/JH220/discord-clearchatbot/wiki
+
+## License
+
+This project is licensed under [AGPL-3.0](LICENSE)!

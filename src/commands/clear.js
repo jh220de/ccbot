@@ -15,12 +15,19 @@ module.exports = {
             return interaction.editReply("You do not have enough permissions to do this.");
         
         const permissions = interaction.channel.permissionsFor(interaction.guild.me);
+        const { connection } = require('../bot');
+        const [rows] = await connection.execute('SELECT * FROM `settings` WHERE `serverId` = ?', [interaction.guild.id]);
+        const showreply = rows[0] ? rows[0].showreply == 1 : false;
+        const reply = await interaction.fetchReply();
+
         if (!permissions.has('VIEW_CHANNEL'))
             return interaction.editReply("The bot has insufficient permissions to view this channel.");
         if (!permissions.has('READ_MESSAGE_HISTORY'))
             return interaction.editReply("The bot has insufficient permissions to read channel history.");
         if (!permissions.has('MANAGE_MESSAGES'))
             return interaction.editReply("The bot has insufficient permissions to manage messages.");
+        if (showreply && !permissions.has('SEND_MESSAGES'))
+            return interaction.editReply("The bot has insufficient permissions to send messages.");
 
         var amount = interaction.options.getInteger('amount');
         if (!amount) amount = 100;
@@ -28,19 +35,14 @@ module.exports = {
 
         if (amount < 1 || amount > 100) return interaction.editReply("You need to input a number between 1 and 100.");
 
-        const { connection } = require('../bot');
-        const [rows] = await connection.execute('SELECT * FROM `settings` WHERE `serverId` = ?', [interaction.guild.id]);
-        var ephemeral = rows[0] ? rows[0].showreply == 0 : false;
-        // TODO
-        const reply = await interaction.fetchReply();
-        
         interaction.channel.messages.fetch({ limit: amount, before: reply.id }).then(fetchMessages => {
             var messages = fetchMessages.filter(message => !message.pinned);
             messages = messages.filter(message => message.id != reply.id)
             if (user) messages = messages.filter(message => message.author.id == user.id);
 
-            interaction.channel.bulkDelete(messages, true).then(messages => {
-                interaction.editReply(`Deleted ${messages.size} message${messages.size != 1 ? 's' : ''} in this channel${user ? ` from ${user}` : ''}.`);
+            interaction.channel.bulkDelete(messages, true).then(async messages => {
+                await interaction.editReply(`Successfully deleted ${messages.size} message${messages.size != 1 ? 's' : ''}${user ? ` from ${user}` : ''}.`);
+                if(showreply) interaction.followUp(`Deleted ${messages.size} message${messages.size != 1 ? 's' : ''} in this channel${user ? ` from ${user}` : ''}.`);
                 connection.execute('UPDATE `stats` SET `execCount` = ? WHERE `interactionId` = ?', [messages.size, interaction.id]);
             });
         });

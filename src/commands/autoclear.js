@@ -16,7 +16,6 @@ module.exports = {
             .addChoice('Only messages without links', 'nonlinks')
         ),
     async execute(interaction) {
-        return;
         const { connection } = require('../bot');
         var mode = interaction.options.getString('mode');
         var duration = interaction.options.getInteger('duration');
@@ -25,6 +24,7 @@ module.exports = {
         if(!mode) {
             const [rows] = await connection.execute('SELECT * FROM `autoclear` WHERE `channelId` = ?', [interaction.channelId]);
             if(!rows[0]) return interaction.editReply("There is no autoclear function in this channel yet.");
+            connection.execute('')
             
         } // remove active mode
         if(!voted) return;
