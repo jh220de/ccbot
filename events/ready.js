@@ -10,8 +10,18 @@ module.exports = {
 		setPermissions();
 		registerCommands();
 		registerEvents();
+		experimental();
 	},
 };
+
+async function experimental() {
+	const wait = require('util').promisify(setTimeout);
+	client.guilds.cache.forEach(guild => {
+		new (require('../mysql'))().updateGuild(guild);
+		wait(10000);
+	});
+	console.log('Ready!');
+}
 
 async function registerCommands() {
 	client.commands = new Collection();
