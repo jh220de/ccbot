@@ -3,9 +3,9 @@ const { Collection } = require('discord.js');
 module.exports = {
 	name: 'ready',
 	once: true,
-	execute(c) {
+	async execute(c) {
 		client = c;
-		new (require('../mysql'))().setup();
+		await new (require('../mysql'))().setup();
 		setInterval(setActivity, 30000);
 		setPermissions();
 		registerCommands();
@@ -16,8 +16,9 @@ module.exports = {
 
 async function experimental() {
 	const wait = require('util').promisify(setTimeout);
+	const mysql = new (require('../mysql'))();
 	client.guilds.cache.forEach(guild => {
-		new (require('../mysql'))().updateGuild(guild);
+		mysql.updateGuild(guild);
 		wait(10000);
 	});
 	console.log('Ready!');
