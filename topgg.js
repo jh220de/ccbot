@@ -5,7 +5,7 @@ const { topgg } = require('./config.json');
 module.exports = {
 	async start(client) {
 		const app = require('express')();
-		const connection = new (require('../mysql'))().getConnection();
+		const connection = new (require('./mysql'))().getConnection();
 
 		const webhook = new Webhook(topgg.webhook);
 		const autoposter = AutoPoster(topgg.token, client);
