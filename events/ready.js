@@ -1,3 +1,5 @@
+const { Collection } = require('discord.js');
+
 module.exports = {
 	name: 'ready',
 	once: true,
@@ -6,9 +8,19 @@ module.exports = {
 		new (require('../mysql'))().setup();
 		setInterval(setActivity, 30000);
 		setPermissions();
+		registerCommands();
 		console.log('Ready!');
 	},
 };
+
+async function registerCommands() {
+	client.commands = new Collection();
+	const commandFiles = require('node:fs').readdirSync('./commands').filter(file => file.endsWith('.js'));
+	for (const file of commandFiles) {
+		const command = require(`../commands/${file}`);
+		client.commands.set(command.data.name, command);
+	}
+}
 
 let count = 1;
 let client;
