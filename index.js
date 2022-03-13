@@ -10,11 +10,11 @@ const manager = new ShardingManager('./bot.js', { token: token });
 
 manager.on('shardCreate', shard => {
 	const start = Date.now();
-	console.log(`Starting shard ${shard.id}...`);
+	console.log(`Starting shard ${shard.id + 1}...`);
 	shard.once('ready', () => {
 		const time = (Date.now() - start).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
-		return console.log(`Shard ${shard.id} started! Startup process took ${time}ms`);
+		return console.log(`Shard ${shard.id + 1} started! Startup process took ${time}ms`);
 	});
 });
 
-manager.spawn();
+manager.spawn().catch(console.error);

@@ -5,24 +5,22 @@ module.exports = {
 	once: true,
 	async execute(c) {
 		client = c;
-		await new (require('../mysql'))().setup();
+		const mysql = new (require('../mysql'))();
+		await mysql.setup();
 		setInterval(setActivity, 30000);
 		setPermissions();
 		registerCommands();
 		registerEvents();
-		experimental();
+
+		const wait = require('util').promisify(setTimeout);
+		for (const guild of client.guilds.cache) {
+			await wait(10000);
+			mysql.updateGuild(guild[1]);
+			console.log(`Logged ${guild[1].id} in shard ${guild[1].shardId + 1}`);
+		}
+		console.log(`Shard ${client.guilds.cache.first().shardId + 1} ready!`);
 	},
 };
-
-async function experimental() {
-	const wait = require('util').promisify(setTimeout);
-	const mysql = new (require('../mysql'))();
-	client.guilds.cache.forEach(guild => {
-		mysql.updateGuild(guild);
-		wait(10000);
-	});
-	console.log('Ready!');
-}
 
 async function registerCommands() {
 	client.commands = new Collection();
