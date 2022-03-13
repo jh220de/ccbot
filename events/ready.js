@@ -9,6 +9,7 @@ module.exports = {
 		setInterval(setActivity, 30000);
 		setPermissions();
 		registerCommands();
+		registerEvents();
 		console.log('Ready!');
 	},
 };
@@ -20,6 +21,15 @@ async function registerCommands() {
 		const command = require(`../commands/${file}`);
 		client.commands.set(command.data.name, command);
 	}
+}
+async function registerEvents() {
+	const eventFiles = require('node:fs').readdirSync(__dirname).filter(file => file.endsWith('.js'));
+	for (const file of eventFiles) {
+		const event = require(`./${file}`);
+		if (event.name == 'ready') continue;
+		if (event.once) client.once(event.name, (...args) => event.execute(...args));
+		else client.on(event.name, (...args) => event.execute(...args));
+}
 }
 
 let count = 1;
