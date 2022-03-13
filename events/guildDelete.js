@@ -3,7 +3,8 @@ module.exports = {
 	async execute(guild) {
 		const time = Math.round(Date.now() / 1000);
 		const serverId = guild.id;
-		await new (require ('../mysql'))().getConnection().execute('UPDATE `servers` SET `botLeave` = ? WHERE `serverId` = ?', [time, serverId]);
+		const mysql = new (require ('../mysql'))();
+		await mysql.getConnection().execute('UPDATE `servers` SET `botLeave` = ? WHERE `serverId` = ?', [time, serverId]);
 		console.log(`Removed ${serverId} from the database.`);
 	},
 };

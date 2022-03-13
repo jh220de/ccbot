@@ -1,6 +1,7 @@
 module.exports = {
 	name: 'guildCreate',
 	async execute(guild) {
-		new (require ('../mysql'))().getConnection().updateGuild(guild);
+		const mysql = new (require ('../mysql'))();
+		mysql.updateGuild(guild);
 	},
 };
