@@ -2,7 +2,7 @@
   "name": "clearchatbot",
   "version": "1.0.0",
   "description": "Get back control of your Discord server now and use the useful features of ClearChat bot!",
-  "main": "src/index.js",
+  "main": "index.js",
   "scripts": {
     "prod": "node .",
     "dev": "nodemon",
