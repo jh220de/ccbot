@@ -29,7 +29,7 @@ async function registerEvents() {
 		if (event.name == 'ready') continue;
 		if (event.once) client.once(event.name, (...args) => event.execute(...args));
 		else client.on(event.name, (...args) => event.execute(...args));
-}
+	}
 }
 
 let count = 1;
