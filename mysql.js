@@ -113,7 +113,7 @@ class mysql {
 		const commandName = interaction.commandName;
 		const commandArgs = interaction.toString();
 
-		await this.connection.execute('INSERT INTO `interactions` VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [interactionId, serverId, channelId, userId, time, commandName, commandArgs, '', '']);
+		await this.connection.execute('INSERT INTO `interactions` VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [interactionId, serverId, channelId, userId, time, commandName, commandArgs, 0, '']);
 	}
 	async existsId(id) {
 		if (!id) return true;
