@@ -8,9 +8,9 @@ module.exports = {
 	async execute(interaction) {
 		const connection = new (require('../mysql'))().getConnection();
 
-		let [rows] = await connection.execute('SELECT COUNT(*) FROM `servers` WHERE `botLeave` IS NULL');
+		let [rows] = await connection.execute('SELECT COUNT(*) FROM `servers` WHERE `botLeave` IS NOT NULL');
 		const servers = rows[0]['COUNT(*)'];
-		[rows] = await connection.execute('SELECT SUM(`memberCount`) FROM `servers`');
+		[rows] = await connection.execute('SELECT SUM(`memberCount`) FROM `servers` WHERE `botLeave` IS NOT NULL');
 		const members = rows[0]['SUM(`memberCount`)'];
 		[rows] = await connection.execute('SELECT COUNT(*) FROM `users`');
 		const users = rows[0]['COUNT(*)'];
