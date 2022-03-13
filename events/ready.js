@@ -14,11 +14,11 @@ module.exports = {
 
 		const wait = require('util').promisify(setTimeout);
 		for (const guild of client.guilds.cache) {
-			await wait(10000);
+			await wait(20000);
 			mysql.updateGuild(guild[1]);
-			console.log(`Logged ${guild[1].id} in shard ${guild[1].shardId + 1}`);
+			// console.log(`Logged ${guild[1].id} in shard ${guild[1].shardId + 1}`);
 		}
-		console.log(`Shard ${client.guilds.cache.first().shardId + 1} ready!`);
+		console.log(`Shard ${client.guilds.cache.first().shardId + 1} updating complete!`);
 	},
 };
 

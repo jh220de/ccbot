@@ -51,6 +51,7 @@ class mysql {
 			const botJoin = Math.round(guild.joinedTimestamp / 1000);
 
 			await this.connection.execute('INSERT INTO `servers` values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [serverId, serverName, shardId, helpId, inviteId, memberCount, ownerId, created, serverPicture, botJoin, '']);
+			console.log(`Added ${serverId} to the database.`);
 		}
 		else await this.connection.execute('UPDATE `servers` SET `serverName` = ?, `shardId` = ?, `inviteId` = ?, `memberCount` = ?, `ownerId` = ?, `serverPicture` = ? WHERE `serverId` = ?', [serverName, shardId, inviteId, memberCount, ownerId, serverPicture, serverId]);
 
