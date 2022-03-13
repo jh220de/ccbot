@@ -55,16 +55,16 @@ module.exports = {
 **Banned** ${banned ? '<:tickYes:315009125694177281>' : '<:tickNo:315009174163685377>'}
 **Help-ID:** ${result.helpId}
 **Shard-ID:** ${result.shardId}${result.inviteId != '' ? `
-**Invite:** ` + result.inviteId : ''}
+**Invite:** https://discord.gg/` + result.inviteId : ''}
 **Members:** ${result.memberCount} members
 **AutoClear count:** ${autoclears} channel${autoclears != 1 ? 's' : ''}
 **Owner:** ${owner ? `[${owner.userName}#${owner.userDiscriminator}](${owner.userProfilePicture}) (<@${result.ownerId}>)` : result.ownerId}
 
 **Server created** <t:${result.created}:R>
 **Bot joined** <t:${result.botJoin}:R>${result.botLeave != '' ? `
-**Bot left** <t:${result.botLeave}:R>` : ''}
-**Owner account created** <t:${owner.created}:R>
-**Last command** <t:${lastInteraction.time}:R>
+**Bot left** <t:${result.botLeave}:R>` : ''}${owner ? `
+**Owner account created** <t:${owner.created}:R>` : ''}${lastInteraction ? `
+**Last command** <t:${lastInteraction.time}:R>` : ''}
 			`);
 		return embed;
 	},

@@ -63,7 +63,13 @@ module.exports = {
 		}
 		}
 	},
-	buttonIds: ['adminServerErrors', 'adminServerSettings', 'adminServerBan'],
+	buttonIds: [
+		'adminServerErrors', 'adminServerSettings', 'adminServerBan',
+		'adminInteractionServer', 'adminInteractionChannel', 'adminInteractionUser',
+		'adminErrorInteraction',
+		'adminUserServers',
+		'adminChannelServer',
+	],
 	async executeButton(interaction) {
 		const mysql = new (require('../mysql'))();
 		if (!interaction.member.roles.cache.has(adminCommand.roleId) && adminCommand.ownerId != interaction.user.id)
@@ -74,6 +80,16 @@ module.exports = {
 		case 'adminServerSettings':
 		case 'adminServerBan':
 			return require('./admin/server').executeButton(interaction);
+		case 'adminInteractionServer':
+		case 'adminInteractionChannel':
+		case 'adminInteractionUser':
+			return require('./admin/interaction').executeButton(interaction);
+		case 'adminErrorInteraction':
+			return require('./admin/error').executeButton(interaction);
+		case 'adminUserServers':
+			return require('./admin/user').executeButton(interaction);
+		case 'adminChannelServer':
+			return require('./admin/channel').executeButton(interaction);
 		}
 	},
 };
