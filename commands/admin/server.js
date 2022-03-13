@@ -58,7 +58,7 @@ module.exports = {
 **Invite:** ` + result.inviteId : ''}
 **Members:** ${result.memberCount} members
 **AutoClear count:** ${autoclears} channel${autoclears != 1 ? 's' : ''}
-**Owner:** [${owner.userName}#${owner.userDiscriminator}](${owner.userProfilePicture}) (<@${result.ownerId}>)
+**Owner:** ${owner ? `[${owner.userName}#${owner.userDiscriminator}](${owner.userProfilePicture}) (<@${result.ownerId}>)` : result.ownerId}
 
 **Server created** <t:${result.created}:R>
 **Bot joined** <t:${result.botJoin}:R>${result.botLeave != '' ? `

@@ -54,7 +54,8 @@ class mysql {
 		}
 		else await this.connection.execute('UPDATE `servers` SET `serverName` = ?, `shardId` = ?, `inviteId` = ?, `memberCount` = ?, `ownerId` = ?, `serverPicture` = ? WHERE `serverId` = ?', [serverName, shardId, inviteId, memberCount, ownerId, serverPicture, serverId]);
 
-		await this.updateMember(await guild.fetchOwner());
+		const owner = await guild.fetchOwner();
+		if (owner) await this.updateMember(owner);
 		[rows] = await this.connection.execute('SELECT * FROM `settings` WHERE `serverId` = ?', [serverId]);
 		if (!rows[0]) await this.connection.execute('INSERT INTO `settings` values (?, ?)', [serverId, true]);
 	}
