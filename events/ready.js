@@ -10,7 +10,6 @@ module.exports = {
 		setPermissions();
 		registerCommands();
 		registerEvents();
-		console.log('Ready!');
 	},
 };
 

@@ -18,6 +18,6 @@ module.exports = {
 			console.log('Top.gg: Posted stats.');
 		});
 
-		app.listen(1337);
+		app.listen(topgg.port);
 	},
 };
