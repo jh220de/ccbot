@@ -11,7 +11,7 @@ module.exports = {
 			return mysql.reply(interaction, false, 'USER_INSUFFICIENT_PERMISSIONS', 'You do not have enough permissions to execute this command.');
 
 		const embed = await this.getEmbed(interaction.guildId);
-		const components = this.getComponents();
+		const components = await this.getComponents();
 		interaction.editReply({ embeds: [embed], components: components });
 		return mysql.reply(interaction, true, 'SENT_EMBED', null);
 	},

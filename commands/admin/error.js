@@ -36,7 +36,7 @@ module.exports = {
 **Error-ID:** ${error.errorId}
 **Interaction-ID:** ${error.interactionId}
 
-**Error: ${error.error}
+**Error:** ${error.error}
 			`);
 		return embed;
 	},

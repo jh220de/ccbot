@@ -30,6 +30,7 @@ module.exports = {
 
 		interaction.channel.delete();
 		const channel = await interaction.channel.clone();
+		// missing permissions for cloning channel
 
 		if (showreply && channel.permissionsFor(interaction.guild.me).has('SEND_MESSAGES'))
 			channel.send(`Deleted all messages in this channel by ${interaction.user}.`);
