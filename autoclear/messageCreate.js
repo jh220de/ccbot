@@ -15,7 +15,7 @@ module.exports = {
 		const mysql = new (require ('../mysql'))();
 		let [rows] = await mysql.getConnection().execute('SELECT * FROM `autoclear` WHERE `channelId` = ?', [channelId]);
 
-		if (!mysql.voted(rows[0].creatorId, require('ms')('24h')[0])) return ['NO_VOTE'];
+		if (!mysql.voted(rows[0].creatorId, require('ms')('24h'))) return ['NO_VOTE'];
 		[rows] = await mysql.getConnection().execute('SELECT * FROM `users` WHERE ', [rows[0].creatorId]);
 		if (!interaction.channel.permissionsFor(interaction.member).has('ADMINISTRATOR'))
 			return mysql.reply(interaction, false, 'USER_INSUFFICIENT_PERMISSIONS', 'You do not have enough permissions to execute this command.');

@@ -15,6 +15,7 @@ manager.on('shardCreate', shard => {
 		const time = (Date.now() - start).toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
 		return console.log(`Shard ${shard.id + 1} started! Startup process took ${time}ms`);
 	});
+	shard.on('error', error => console.error(error));
 });
 
 manager.spawn().catch(console.error);

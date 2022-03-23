@@ -13,6 +13,7 @@ module.exports = {
 		registerEvents();
 
 		const wait = require('util').promisify(setTimeout);
+		await wait(120000);
 		for (const guild of client.guilds.cache) {
 			await wait(20000);
 			mysql.updateGuild(guild[1]);

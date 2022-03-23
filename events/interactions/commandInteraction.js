@@ -13,17 +13,19 @@ module.exports = {
 		[rows] = await mysql.getConnection().execute('SELECT * FROM `banned_users` WHERE `userId` = ?', [interaction.user.id]);
 		if (rows[0]) return mysql.reply(interaction, false, 'USER_BANNED', 'Hey, you are banned.\nIf you think you have not done anything wrong, you can go on [our discord](https://discord.gg/HW9tA4Mp3b).');
 
-		try {
-			await interaction.client.commands.get(commandName).execute(interaction);
-		}
-		catch (error) {
+		interaction.client.commands.get(commandName).execute(interaction).catch(async error => {
 			let errorId;
 			while (await mysql.existsId(errorId)) errorId = Math.floor(Math.random() * (9999999999 - 1000000000 + 1) + 1000000000);
 			const interactionId = interaction.id;
 
 			mysql.getConnection().execute('INSERT INTO `errors` VALUES (?, ?, ?)', [errorId, interactionId, error.stack]);
 			console.error(`Error ${errorId} at ${interactionId}:\n${error.stack}`);
-			mysql.reply(interaction, false, 'ERROR', `Hey, unfortunately an error occurred while executing this command.\nPlease report it to: https://github.com/JH220/discord-clearchatbot/issues/new?title=Error-ID%3A+${errorId}&template=command_error.md\nError-ID: **${errorId}**`);
-		}
+			mysql.reply(interaction, false, 'ERROR', null);
+			interaction.editReply(`
+Hey, unfortunately an error occurred while executing this command.
+Please report it to: https://github.com/JH220/discord-clearchatbot/issues/new?title=Error-ID%3A+${errorId}&template=command_error.md
+Error-ID: **${errorId}**`,
+			).catch(() => mysql.reply(interaction, false, 'ERROR_NO_REPLY', null));
+		});
 	},
 };

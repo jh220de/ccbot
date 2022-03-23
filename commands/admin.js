@@ -22,6 +22,9 @@ module.exports = {
 			.setName('toggle')
 			.setDescription('Disables or enables a selected command.')
 			.addStringOption(option => option.setName('command').setDescription('Specify the command here.').setChoices(commands).setRequired(true)),
+		).addSubcommand(subcommand => subcommand
+			.setName('log')
+			.setDescription('Shows logs and errors.'),
 		),
 	async execute(interaction) {
 		const mysql = new (require('../mysql'))();
@@ -60,6 +63,24 @@ module.exports = {
 				await connection.execute('DELETE FROM `disabled_commands` WHERE `commandName` = ?', [command.toLowerCase()]);
 				return mysql.reply(interaction, true, 'ENABLED_COMMAND', `The command ${command} was successfully enabled.`);
 			}
+		}
+		case 'log': {
+			/* const log = {};
+
+			const max = Math.round(Date.now() / 1000);
+			const min = max - require('ms')('24h');
+
+			let [rows] = connection.execute('SELECT * FROM `servers` WHERE `botJoin` BETWEEN ? AND ?', [min, max]);
+			for (const row in rows) log[row.botJoin] = ['join', row];
+			[rows] = connection.execute('SELECT * FROM `servers` WHERE `botLeave` BETWEEN ? AND ?', [min, max]);
+			for (const row in rows) log[row.botLeave] = ['leave', row];
+			[rows] = connection.execute('SELECT * FROM `interactions` WHERE `time` BETWEEN ? AND ?', [min, max]);
+			for (const row in rows) log[row.time] = ['interaction', row];
+			[rows] = connection.execute('SELECT * FROM `votes` WHERE `time` BETWEEN ? AND ?', [min, max]);
+			for (const row in rows) log[row.time] = ['vote', row];
+
+			console.log(log);*/
+			return mysql.reply(interaction, true, 'UNDER_CONSTRUCTION', 'This command is under construction!');
 		}
 		}
 	},

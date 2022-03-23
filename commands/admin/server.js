@@ -61,7 +61,7 @@ module.exports = {
 **Owner:** ${owner ? `[${owner.userName}#${owner.userDiscriminator}](${owner.userProfilePicture}) (<@${result.ownerId}>)` : result.ownerId}
 
 **Server created** <t:${result.created}:R>
-**Bot joined** <t:${result.botJoin}:R>${result.botLeave != '' ? `
+**Bot joined** <t:${result.botJoin}:R>${result.botLeave ? `
 **Bot left** <t:${result.botLeave}:R>` : ''}${owner ? `
 **Owner account created** <t:${owner.created}:R>` : ''}${lastInteraction ? `
 **Last command** <t:${lastInteraction.time}:R>` : ''}

@@ -17,15 +17,15 @@ class mysql {
 			password: sql.password,
 		});
 
-		this.connection.execute('CREATE TABLE IF NOT EXISTS `interactions` (interactionId VARCHAR(18), serverId VARCHAR(18), channelId VARCHAR(18), userId VARCHAR(18), time VARCHAR(16), commandName VARCHAR(20), commandArgs VARCHAR(100), successful TINYINT(1), result VARCHAR(1000))');
+		this.connection.execute('CREATE TABLE IF NOT EXISTS `interactions` (interactionId VARCHAR(18), serverId VARCHAR(18), channelId VARCHAR(18), userId VARCHAR(18), time BIGINT, commandName VARCHAR(20), commandArgs VARCHAR(100), successful TINYINT(1), result VARCHAR(1000))');
 		this.connection.execute('CREATE TABLE IF NOT EXISTS `errors` (errorId VARCHAR(10), interactionId VARCHAR(18), error VARCHAR(1000))');
-		this.connection.execute('CREATE TABLE IF NOT EXISTS `servers` (serverId VARCHAR(18), serverName VARCHAR(100), shardId INT, helpId VARCHAR(10), inviteId VARCHAR(10), memberCount INT, ownerId VARCHAR(18), created VARCHAR(16), serverPicture VARCHAR(100), botJoin VARCHAR(16), botLeave VARCHAR(16))');
+		this.connection.execute('CREATE TABLE IF NOT EXISTS `servers` (serverId VARCHAR(18), serverName VARCHAR(100), shardId INT, helpId VARCHAR(10), inviteId VARCHAR(10), memberCount INT, ownerId VARCHAR(18), created BIGINT, serverPicture VARCHAR(100), botJoin BIGINT, botLeave BIGINT)');
 		this.connection.execute('CREATE TABLE IF NOT EXISTS `settings` (serverId VARCHAR(18), showreply TINYINT(1))');
 		this.connection.execute('CREATE TABLE IF NOT EXISTS `channels` (channelId VARCHAR(18), serverId VARCHAR(18), channelName VARCHAR(100), channelTopic VARCHAR(1024))');
 		this.connection.execute('CREATE TABLE IF NOT EXISTS `autoclear` (channelId VARCHAR(18), serverId VARCHAR(18), creatorId VARCHAR(18), duration INT, mode VARCHAR(20))');
-		this.connection.execute('CREATE TABLE IF NOT EXISTS `users` (userId VARCHAR(18), userName VARCHAR(100), userDiscriminator VARCHAR(4), userProfilePicture VARCHAR(100), created VARCHAR(16))');
+		this.connection.execute('CREATE TABLE IF NOT EXISTS `users` (userId VARCHAR(18), userName VARCHAR(100), userDiscriminator VARCHAR(4), userProfilePicture VARCHAR(100), created BIGINT)');
 		this.connection.execute('CREATE TABLE IF NOT EXISTS `members` (userId VARCHAR(18), serverId VARCHAR(18), memberNickname VARCHAR(100))');
-		this.connection.execute('CREATE TABLE IF NOT EXISTS `votes` (userId VARCHAR(18), time VARCHAR(16))');
+		this.connection.execute('CREATE TABLE IF NOT EXISTS `votes` (userId VARCHAR(18), time BIGINT)');
 		this.connection.execute('CREATE TABLE IF NOT EXISTS `vote_whitelist` (userId VARCHAR(18))');
 		this.connection.execute('CREATE TABLE IF NOT EXISTS `disabled_commands` (commandName VARCHAR(20))');
 		this.connection.execute('CREATE TABLE IF NOT EXISTS `banned_servers` (serverId VARCHAR(18))');
@@ -50,7 +50,7 @@ class mysql {
 			const created = Math.round(guild.createdTimestamp / 1000);
 			const botJoin = Math.round(guild.joinedTimestamp / 1000);
 
-			await this.connection.execute('INSERT INTO `servers` values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [serverId, serverName, shardId, helpId, inviteId, memberCount, ownerId, created, serverPicture, botJoin, '']);
+			await this.connection.execute('INSERT INTO `servers` values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL)', [serverId, serverName, shardId, helpId, inviteId, memberCount, ownerId, created, serverPicture, botJoin]);
 			console.log(`Added ${serverId} to the database.`);
 		}
 		else await this.connection.execute('UPDATE `servers` SET `serverName` = ?, `shardId` = ?, `inviteId` = ?, `memberCount` = ?, `ownerId` = ?, `serverPicture` = ? WHERE `serverId` = ?', [serverName, shardId, inviteId, memberCount, ownerId, serverPicture, serverId]);
