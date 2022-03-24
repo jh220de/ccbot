@@ -2,7 +2,13 @@ module.exports = {
 	async execute(interaction) {
 		const { commandName } = interaction;
 		if (!interaction.client.commands.has(commandName)) return;
-		await interaction.deferReply({ ephemeral: true });
+
+		try {
+			await interaction.deferReply({ ephemeral: true });
+		}
+		catch (error) {
+			return;
+		}
 
 		const mysql = new (require('../../mysql'))();
 		await mysql.updateOnInteraction(interaction);
