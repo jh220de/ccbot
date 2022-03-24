@@ -1,7 +1,11 @@
 const { ShardingManager } = require('discord.js');
 const { token, topgg } = require('./config.json');
 
-const manager = new ShardingManager('./bot.js', { token: token });
+const manager = new ShardingManager('./bot.js', {
+	totalShards: 'auto',
+	token: token,
+	respawn: true,
+});
 
 (async () => {
 	await new (require('./mysql'))().setup();
@@ -18,4 +22,5 @@ manager.on('shardCreate', shard => {
 	shard.on('error', error => console.error(error));
 });
 
-manager.spawn().catch(console.error);
+manager.spawn(manager.totalShards, 5500, -1)
+	.catch(error => console.error(error));
