@@ -8,7 +8,7 @@ module.exports = {
 		const mysql = new (require('../mysql'))();
 		await mysql.setup();
 		setInterval(setActivity, 30000);
-		setPermissions();
+		// setPermissions();
 		registerCommands();
 		registerEvents();
 

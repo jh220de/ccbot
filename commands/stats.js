@@ -27,7 +27,7 @@ module.exports = {
 			.setTitle('ClearChat-Bot Stats 📈')
 			.setDescription(`
 **Servers:** ${servers.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}
-**Members:** ${members.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}
+**Members:** ${members.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')} // Error
 **Users:** ${users.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')}
 **Ping:** ${Math.round(interaction.client.ws.ping)}ms
 ${interaction.inGuild() ? `

@@ -23,4 +23,5 @@ manager.on('shardCreate', shard => {
 });
 
 manager.spawn(manager.totalShards, 5500, -1)
+	.then(() => console.log('Shards spawned!'))
 	.catch(error => console.error(error));

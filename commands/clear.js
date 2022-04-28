@@ -5,7 +5,8 @@ module.exports = {
 		.setName('clear')
 		.setDescription('♻️ Clears the message history by a specified amount of messages')
 		.addIntegerOption(option => option.setName('amount').setDescription('Number of messages to clear'))
-		.addUserOption(option => option.setName('target').setDescription('Clear messages only from a specific user')),
+		.addUserOption(option => option.setName('target').setDescription('Clear messages only from a specific user'))
+		.addRoleOption(option => option.setName('role').setDescription('Filter by a specific role.')),
 	async execute(interaction) {
 		const mysql = new (require('../mysql'))();
 		if (interaction.guild == null || interaction.channel.type != 'GUILD_TEXT')
@@ -29,6 +30,7 @@ module.exports = {
 		let amount = interaction.options.getInteger('amount');
 		if (!amount) amount = 100;
 		const user = interaction.options.getUser('target');
+		const role = interaction.options.getRole('role');
 
 		if (amount < 1 || amount > 100)
 			return mysql.reply(interaction, false, 'AMOUNT_OUT_OF_RANGE', 'You need to input a number between 1 and 100.');
@@ -36,6 +38,7 @@ module.exports = {
 		const reply = await interaction.fetchReply();
 		let fetched = await interaction.channel.messages.fetch({ limit: amount, before: reply.id });
 		fetched = fetched.filter(message => !message.pinned);
+		fetched = fetched.filter(message => message.user.roles.contains(role)); // Error
 		if (user) fetched = fetched.filter(message => message.author.id == user.id);
 
 		const messages = await interaction.channel.bulkDelete(fetched, true);
