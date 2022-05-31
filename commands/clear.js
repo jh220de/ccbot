@@ -38,7 +38,7 @@ module.exports = {
 		const reply = await interaction.fetchReply();
 		let fetched = await interaction.channel.messages.fetch({ limit: amount, before: reply.id });
 		fetched = fetched.filter(message => !message.pinned);
-		fetched = fetched.filter(message => message.user.roles.contains(role)); // Error
+		fetched = fetched.filter(message => message.member.roles.cache.has(role));
 		if (user) fetched = fetched.filter(message => message.author.id == user.id);
 
 		const messages = await interaction.channel.bulkDelete(fetched, true);
