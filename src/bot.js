@@ -45,6 +45,9 @@ for (const file of contextMenuFiles) {
 
 // Runs when an interaction is created
 client.on('interactionCreate', async interaction => {
+	// Returns if bot is not ready
+	if (!(new (require('./database'))().getConnection())) return;
+
 	// Import mysql database
 	const database = new (require('./database'))();
 	const { models } = database.getConnection();
