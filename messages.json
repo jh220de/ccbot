@@ -1,0 +1,15 @@
+{
+	"COMMAND_DISABLED": "Unfortunately, this command has been disabled.\nPlease try again later.\nReason: %REASON%",
+	"USER_BANNED": "Hey, you are banned.\nReason: %REASON%\nIf you think you have not done anything wrong, you can go on [our discord server](https://discord.gg/HW9tA4Mp3b) and provide the following ban id: %BAN_ID%",
+	"GUILD_BANNED": "Hey, this server is banned.\nReason: %REASON%\nIf you think this is a mistake, you can go on [our discord server](https://discord.gg/HW9tA4Mp3b) and provide the following ban id: %BAN_ID%",
+	"ERROR": "Hey, unfortunately an error occurred while executing this interaction.\nPlease report it to: https://github.com/JH220/discord-clearchatbot/issues/new?title=Interaction-ID%3A+%INTERACTION_ID%&template=command_error.md\nInteraction-ID: **%INTERACTION_ID%**",
+	"BOT_NO_PERMS": "The bot has insufficient permissions to execute this command.\nMissing permission: %PERMISSION%",
+	"CLEARED_MESSAGES": "Successfully deleted %MESSAGE_AMOUNT% messages.",
+	"CLEARED_MESSAGES_BROADCAST": "Deleted %MESSAGE_AMOUNT% messages in this channel by <@%USER_ID%>.",
+	"RULES_CHANNEL": "Since this channel has been set as a rules channel, this channel cannot be deleted.",
+	"UPDATES_CHANNEL": "Since this channel has been set as a community updates channel, this channel cannot be deleted.",
+	"SYSTEM_CHANNEL": "Since this channel has been set as a system channel, this channel cannot be deleted.",
+	"RECREATED_CHANNEL": "Deleted all messages in this channel by <@%USER_ID%>.",
+	"SETTINGS_EMBED": "This is the settings page of the ClearChat bot.\nYou can select a setting from the drop-down menu below this message and then enable or disable it.\nThe updated setting will immediately appear updated in the message, so you can make further adjustments.\nTo reset all settings to their default values, click \"Reset all settings\" there.",
+	"VOTE_EMBED": "Hey, you can vote via [this link](https://jh220.de/cc/vote).\nThis will give you access to new cool features.\n\nIf you want to invite the bot to your server, click on [this link](https://discord.com/oauth2/authorize?client_id=787789079227006976&permissions=484432&redirect_uri=https%3A%2F%2Fwww.jh220.de&scope=bot%20applications.commands).\nIf you need help with the bot, please visit our [Discord support server](https://discord.gg/HW9tA4Mp3b)."
+}
