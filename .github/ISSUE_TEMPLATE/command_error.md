@@ -1,7 +1,7 @@
 ---
 name: Error occurring in a command
 about: Creates a report about an error that occurs when executing the command
-title: 'Error-ID: '
+title: 'Interaction-ID: '
 labels: ''
 assignees: ''
 

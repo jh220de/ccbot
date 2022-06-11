@@ -1,15 +1,9 @@
 Important: This file/data is only for illustration purposes to show how the actual config.json is structured!
 
 {
-    "appId": "787789079227006976",
+    "clientId": "787789079227006976",
     "token": "ODNzMzg3MzUxGrYyNjMzNzM5.YHxmdA.KoU5YyuK_83Ne0z0MUEt9DUXszq",
-    "sql": {
-        "host": "localhost",
-        "port": 3306,
-        "database": "clearchat",
-        "user": "root",
-        "password": "password"
-    },
+    "database": "mysql://user:pass@host:3306/dbname",
     "adminCommand": {
         "commandId": "322605069189280782",
         "ownerId": "314090743830675466",
