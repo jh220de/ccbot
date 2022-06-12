@@ -9,6 +9,8 @@ module.exports = {
 		// Gets the database entry for the server
 		const server = await Server.findOne({ where: { guildId: guild.id, botLeave: null } });
 
+		// Returns if the server is null
+		if (!server) return;
 		// Updates the database entry of the server
 		server.update({ botLeave: Date.now() });
 
