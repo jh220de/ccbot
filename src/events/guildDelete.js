@@ -1,6 +1,9 @@
 module.exports = {
 	name: 'guildDelete',
 	async execute(guild) {
+		// Returns if bot is not ready
+		if (!(new (require('../database'))().getConnection())) return;
+
 		// Gets the Server model from the current database connection
 		const Server = new (require('../database'))().getConnection().models.Server;
 		// Gets the database entry for the server
