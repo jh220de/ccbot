@@ -5,14 +5,14 @@ module.exports = {
 		// Get the database connection
 		const database = new (require('../database'))();
 		// Gets the database entry of the current server
-		const settings = await database.getSettings(interaction.guildId);
+		const settings = await database.getSettings(interaction.guild);
 
 		// Toggles the selected setting
 		const setting = interaction.values[0];
 		await settings.update({ [setting]: !settings[setting] });
 
 		// Update the interactions reply embed to the new settings
-		interaction.update({ embeds: [ await require('../commands/settings').getEmbed(interaction.guildId) ] });
+		interaction.update({ embeds: [ await require('../commands/settings').getEmbed(interaction.guild) ] });
 		database.reply(interaction, 'TOGGLE_SETTING', { SETTING: setting, NEW_STATE: !settings[setting] }, false);
 	},
 };

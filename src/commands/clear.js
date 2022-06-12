@@ -20,7 +20,7 @@ module.exports = {
 		// Get the database connection
 		const database = new (require('../database'))();
 		// Get the settings for the specified guild id
-		const settings = await database.getSettings(interaction.guildId);
+		const settings = await database.getSettings(interaction.guild);
 
 		// Check if the bot has enough permissions to clear the chat history
 		const permissions = interaction.channel.permissionsFor(interaction.guild.me);

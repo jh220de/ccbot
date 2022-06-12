@@ -244,9 +244,10 @@ module.exports = class database {
 	 * @param {string} guildId The id of the guild
 	 * @returns {Promise<Model>} Settings for the specified guild
 	 */
-	async getSettings(guildId) {
+	async getSettings(guild) {
 		// Gets the server id from the specified guild
-		const { serverId } = await this.connection.models.Server.findOne({ where: { guildId: guildId, botLeave: null } });
+		await this.updateServer(guild);
+		const { serverId } = await this.connection.models.Server.findOne({ where: { guildId: guild.id, botLeave: null } });
 		// Looks for an database entry in server settings
 		let settings = await this.connection.models.ServerSetting.findOne({ where: { serverId: serverId } });
 

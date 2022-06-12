@@ -11,7 +11,7 @@ module.exports = {
 		// Get the database connection
 		const database = new (require('../database'))();
 		// Get the settings for the specified guild id
-		const settings = await database.getSettings(interaction.guildId);
+		const settings = await database.getSettings(interaction.guild);
 
 		if (interaction.guild.rulesChannelId == interaction.channelId) return database.reply(interaction, 'RULES_CHANNEL');
 		if (interaction.guild.publicUpdatesChannelId == interaction.channelId) return database.reply(interaction, 'UPDATES_CHANNEL');

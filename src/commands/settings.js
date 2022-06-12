@@ -11,12 +11,12 @@ module.exports = {
 		// Get the database connection
 		const database = new (require('../database'))();
 
-		interaction.editReply({ embeds: [ await this.getEmbed(interaction.guildId) ], components: await this.getComponents() });
+		interaction.editReply({ embeds: [ await this.getEmbed(interaction.guild) ], components: await this.getComponents() });
 		database.reply(interaction, 'SETTINGS_EMBED', null, false);
 	},
-	async getEmbed(guildId) {
+	async getEmbed(guild) {
 		// Get the settings for the specified guild id
-		const settings = await new (require('../database'))().getSettings(guildId);
+		const settings = await new (require('../database'))().getSettings(guild);
 
 		// Returns the embed for the guild
 		return new MessageEmbed()
