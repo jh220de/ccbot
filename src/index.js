@@ -4,7 +4,6 @@ const { ShardingManager } = require('discord.js');
 const manager = new ShardingManager('./src/bot.js', {
 	token: require('../config.json').token,
 	mode: 'worker',
-	spawnTimeout: -1,
 });
 
 // Enable TopGG stats posting and vote listening if set up in config
@@ -30,4 +29,4 @@ manager.on('shardCreate', shard => {
 });
 
 // Spawns the different shards
-manager.spawn().catch(error => console.log(error));
+manager.spawn({ timeout: -1 }).catch(error => console.log(error));
