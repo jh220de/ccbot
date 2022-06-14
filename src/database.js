@@ -140,6 +140,8 @@ module.exports = class database {
 			channelName: interaction.channel.name,
 			userId: interaction.user.id,
 			command: command,
+			result: 'WAITING_FOR_RESPONSE',
+			args: getErrorArgs(interaction),
 		});
 	}
 
@@ -157,14 +159,7 @@ module.exports = class database {
 	async reply(interaction, result, args = null, reply = true) {
 		// Log some debug info if reply is an error
 		if (result == 'ERROR') {
-			args.botChannelPermissions = interaction.channel.permissionsFor(interaction.guild.me).toArray().toString();
-			args.userChannelPermissions = interaction.memberPermissions.toArray().toString();
-			args.botGuildPermissions = interaction.guild.me.permissions.toArray().toString();
-			args.userGuildPermissions = interaction.member.permissions.toArray().toString();
-			if (interaction.channel.partial) {
-				args.botParentPermissions = interaction.channel.parent.permissionsFor(interaction.guild.me).toArray().toString();
-				args.userParentPermissions = interaction.channel.parent.permissionsFor(interaction.member).toArray().toString();
-			}
+			args = getErrorArgs(args);
 		}
 		// Update the result with the interaction database entry
 		await this.connection.models.Interaction.update({ result: result, args: args ? JSON.stringify(args) : null }, { where: { interactionId: interaction.id } });
@@ -279,4 +274,15 @@ async function getInvites(guild) {
 	fetchedInvites.forEach(invite => invites.push(invite.code));
 	// Returns the invite array
 	return invites;
+}
+async function getErrorArgs(interaction, args = null) {
+	if (!args) args = {};
+	args.botChannelPermissions = interaction.channel.permissionsFor(interaction.guild.me).toArray().toString();
+	args.userChannelPermissions = interaction.memberPermissions.toArray().toString();
+	args.botGuildPermissions = interaction.guild.me.permissions.toArray().toString();
+	args.userGuildPermissions = interaction.member.permissions.toArray().toString();
+	if (interaction.channel.partial) {
+		args.botParentPermissions = interaction.channel.parent.permissionsFor(interaction.guild.me).toArray().toString();
+		args.userParentPermissions = interaction.channel.parent.permissionsFor(interaction.member).toArray().toString();
+	}
 }

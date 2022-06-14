@@ -49,10 +49,10 @@ module.exports = {
 		if (user) fetched = fetched.filter(message => message.author.id == user.id);
 		// Filter messages from a specific role if specified
 		const role = interaction.options.getRole('role');
-		if (role) fetched = fetched.filter(message => message.member.roles.cache.has(role));
+		if (role) fetched = fetched.filter(message => message.member && message.member.roles.cache.has(role));
 		// Filter messages from bots if specified
 		const bot = interaction.options.getBoolean('bot');
-		if (bot) fetched = fetched.filter(message => message.member.user.bot);
+		if (bot) fetched = fetched.filter(message => message.member && message.member.user.bot);
 
 		// Bulk delete messages
 		const messages = await interaction.channel.bulkDelete(fetched, true);
