@@ -202,7 +202,7 @@ module.exports = class database {
 		if (interaction) {
 			// Replace default placeholders
 			reply = reply.replaceAll('%INTERACTION_ID%', interaction.id);
-			reply = reply.replaceAll('%CHANNEL_ID%', interaction.channelId).replaceAll('%CHANNEL_NAME%', interaction.channel.name);
+			if (interaction.channel) reply = reply.replaceAll('%CHANNEL_ID%', interaction.channelId).replaceAll('%CHANNEL_NAME%', interaction.channel.name);
 			reply = reply.replaceAll('%USER_ID%', interaction.user.id).replaceAll('%USER_NAME%', `${interaction.user.name}#${interaction.user.discriminator}`);
 			// Replace server placeholders
 			if (interaction.inGuild()) {

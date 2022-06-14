@@ -24,19 +24,19 @@ module.exports = {
 			// Check if the bot has enough permissions to clone the channel
 			let type = 'GUILD';
 			permissions = interaction.guild.me.permissions;
-			if (interaction.channel.partial) {
+			if (interaction.channel.parent) {
+				type = 'PARENT';
 				permissions = interaction.channel.parent.permissionsFor(interaction.guild.me);
-				type = 'PARTIAL';
 			}
 			if (!permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) return database.reply(interaction, 'BOT_NO_PERMS', { 'PERMISSION': `MANAGE_CHANNELS_${type}` });
 			if (settings.showreply && !permissions.has(Permissions.FLAGS.SEND_MESSAGES))
-				return database.reply(interaction, 'BOT_NO_PERMS', { 'PERMISSION': `SEND_CHANNELS_${type}` });
+				return database.reply(interaction, 'BOT_NO_PERMS', { 'PERMISSION': `SEND_MESSAGES_${type}` });
 		}
 
 		// Clones the channel
 		const channel = await interaction.channel.clone();
 		// Deletes the old channel
-		interaction.channel.delete();
+		await interaction.channel.delete();
 
 		// Update interaction status and send reply if enabled
 		database.reply(interaction, 'RECREATED_CHANNEL', null, false);
