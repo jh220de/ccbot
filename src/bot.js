@@ -45,6 +45,9 @@ for (const file of contextMenuFiles) {
 
 // Runs when an interaction is created
 client.on('interactionCreate', async interaction => {
+	// Defer reply to prevent timeout errors
+	await interaction.deferReply({ ephemeral: true });
+
 	// Returns if bot is not ready
 	if (!(new (require('./database'))().getConnection())) return;
 
@@ -68,9 +71,6 @@ client.on('interactionCreate', async interaction => {
 		const { commandName } = interaction;
 		// Returns if command does not exists
 		if (!interaction.client.commands.has(commandName)) return;
-
-		// Defer reply to prevent timeout errors
-		await interaction.deferReply({ ephemeral: true });
 
 		// Lookup if command is disabled by an admin
 		const disabledCommand = await models.DisabledCommands.findOne({ where: { commandName: commandName } });
