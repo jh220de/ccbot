@@ -1,13 +1,16 @@
 module.exports = {
 	name: 'ready',
 	once: true,
+	/* eslint-disable no-unused-vars */
 	async execute(client) {
 		// Create database instance and setup a new connection to it
 		await new (require('../database'))().setup();
 
 		// Sets the bot's activity
+		/*
 		setTimeout(() => setActivity(client), 1000);
 		setInterval(() => setActivity(client), 30000);
+		*/
 	},
 };
 
