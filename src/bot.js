@@ -45,6 +45,8 @@ for (const file of contextMenuFiles) {
 
 // Runs when an interaction is created
 client.on('interactionCreate', async interaction => {
+	// Return if interaction is unknown
+	if (!interaction.isRepliable()) return;
 	// Defer reply to prevent timeout errors
 	await interaction.deferReply({ ephemeral: true });
 
