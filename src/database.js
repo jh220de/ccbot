@@ -130,7 +130,7 @@ module.exports = class database {
 		// If interaction is in a guild the server entry will be updated and its serverId will be saved
 		const serverId = interaction.inGuild() ? (await this.updateServer(interaction.guild)).serverId : null;
 		// Return command name and args if command interaction otherwise save custom id
-		const command = interaction.isCommand() ? interaction.toString() : interaction.customId.split(',').toString();
+		const command = interaction.isCommand() || interaction.isMessageContextMenu() ? interaction.toString() : interaction.customId.split(',').toString();
 
 		// Creates a database entry for the interaction
 		return await Interaction.create({
@@ -165,8 +165,7 @@ module.exports = class database {
 		// Returns if no reply should be sent
 		if (!reply) return;
 		// Replys to the defered interaction with replaced args
-		if (interaction.isCommand()) return await interaction.editReply(await this.getMessage(result, interaction, args));
-		else return await interaction.update(await this.getMessage(result, interaction, args));
+		return await interaction.editReply(await this.getMessage(result, interaction, args));
 	}
 	/**
 	 * This method is used to get the message of a specific result.
