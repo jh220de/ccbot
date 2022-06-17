@@ -28,6 +28,8 @@ module.exports = {
 		// Fetch messages before the message with the specified amount
 		let fetched = await interaction.channel.messages.fetch({ limit: 100, before: reply.id });
 
+		// Filter messages that are not deletable
+		fetched = fetched.filter(message => !message.deletable);
 		// Filter messages that are pinned
 		fetched = fetched.filter(message => !message.pinned);
 
