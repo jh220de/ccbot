@@ -23,7 +23,7 @@ module.exports = {
 			.setColor('00FFFF')
 			.setTitle('ClearChat-Bot Settings ⚙️')
 			.setDescription(await new (require('../database'))().getMessage('SETTINGS_EMBED'))
-			.addField('Show Reply', settings.showreply ? '<:tickYes:315009125694177281> ON' : '<:tickNo:315009174163685377> OFF');
+			.addField('Show Reply', settings.showreply ? '✅ ON' : '❎ OFF');
 	},
 	async getComponents() {
 		// Returns the toggle menu and reset button components

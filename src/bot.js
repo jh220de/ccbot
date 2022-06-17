@@ -48,7 +48,8 @@ client.on('interactionCreate', async interaction => {
 	// Return if interaction is unknown
 	if (!interaction.isRepliable()) return;
 	// Defer reply to prevent timeout errors
-	await interaction.deferReply({ ephemeral: true });
+	if (interaction.isCommand()) await interaction.deferReply({ ephemeral: true });
+	else await interaction.deferUpdate({ ephemeral: true });
 
 	// Returns if bot is not ready
 	if (!(new (require('./database'))().getConnection())) return;

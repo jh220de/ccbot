@@ -12,7 +12,7 @@ module.exports = {
 		await settings.update({ [setting]: !settings[setting] });
 
 		// Update the interactions reply embed to the new settings
-		interaction.update({ embeds: [ await require('../commands/settings').getEmbed(interaction.guild) ] });
+		interaction.editReply({ embeds: [ await require('../commands/settings').getEmbed(interaction.guild) ] });
 		database.reply(interaction, 'TOGGLE_SETTING', { SETTING: setting, NEW_STATE: !settings[setting] }, false);
 	},
 };
