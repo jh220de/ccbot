@@ -17,11 +17,12 @@ module.exports = {
 		if (interaction.guild.publicUpdatesChannelId == interaction.channelId) return database.reply(interaction, 'UPDATES_CHANNEL');
 		if (interaction.guild.systemChannelId == interaction.channelId) return database.reply(interaction, 'SYSTEM_CHANNEL');
 
-		// Check if the bot has enough permissions to clear the chat history
+		// Check if the bot has enough permissions to delete the channel
 		let permissions = interaction.channel.permissionsFor(interaction.guild.me);
 		if (!permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
 			if (!permissions.has(Permissions.FLAGS.VIEW_CHANNEL)) return database.reply(interaction, 'BOT_NO_PERMS', { 'PERMISSION': 'VIEW_CHANNEL' });
 			if (!permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) return database.reply(interaction, 'BOT_NO_PERMS', { 'PERMISSION': 'MANAGE_CHANNELS' });
+			if (!interaction.channel.deletable) return database.reply(interaction, 'CHANNEL_NOT_DELETABLE');
 			// Check if the bot has enough permissions to clone the channel
 			let type = 'GUILD';
 			permissions = interaction.guild.me.permissions;
