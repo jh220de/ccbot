@@ -22,25 +22,25 @@ for (const file of commandFiles) {
 }
 
 // Reading button files
-const buttons = new Collection();
+client.buttons = new Collection();
 const buttonFiles = fs.readdirSync('./src/buttons').filter(file => file.endsWith('.js'));
 for (const file of buttonFiles) {
 	const button = require(`./buttons/${file}`);
-	buttons.set(button.id, button);
+	client.buttons.set(button.id, button);
 }
 // Reading select menu files
-const selectMenus = new Collection();
+client.selectMenus = new Collection();
 const selectMenuFiles = fs.readdirSync('./src/selectMenus').filter(file => file.endsWith('.js'));
 for (const file of selectMenuFiles) {
 	const selectMenu = require(`./selectMenus/${file}`);
-	selectMenus.set(selectMenu.id, selectMenu);
+	client.selectMenus.set(selectMenu.id, selectMenu);
 }
 // Reading context menu files
-const contextMenus = new Collection();
+client.contextMenus = new Collection();
 const contextMenuFiles = fs.readdirSync('./src/contextMenus').filter(file => file.endsWith('.js'));
 for (const file of contextMenuFiles) {
 	const contextMenu = require(`./contextMenus/${file}`);
-	contextMenus.set(contextMenu.id, contextMenu);
+	client.contextMenus.set(contextMenu.data.name, contextMenu);
 }
 
 // Runs when an interaction is created
@@ -48,8 +48,11 @@ client.on('interactionCreate', async interaction => {
 	// Return if interaction is unknown
 	if (!interaction.isRepliable()) return;
 	// Defer reply to prevent timeout errors
-	if (interaction.isCommand()) await interaction.deferReply({ ephemeral: true });
-	else await interaction.deferUpdate({ ephemeral: true });
+	if (interaction.isCommand() || interaction.isMessageContextMenu())
+		await interaction.deferReply({ ephemeral: true });
+	else if (interaction.isButton() || interaction.isSelectMenu())
+		await interaction.deferUpdate({ ephemeral: true });
+	else return;
 
 	// Returns if bot is not ready
 	if (!(new (require('./database'))().getConnection())) return;
@@ -94,15 +97,15 @@ client.on('interactionCreate', async interaction => {
 		// Get the custom id of the button interaction
 		const customId = interaction.customId.split(',')[0];
 		// Returns if button does not exits
-		if (!buttons.has(customId)) return;
+		if (!client.buttons.has(customId)) return;
 
 		// Lookup if button is disabled by an admin
-		const disabledCommand = await models.DisabledCommands.findOne({ where: { commandName: buttons.get(customId).linkedCommand } });
+		const disabledCommand = await models.DisabledCommands.findOne({ where: { commandName: client.buttons.get(customId).linkedCommand } });
 		if (disabledCommand) return database.reply(interaction, 'COMMAND_DISABLED', { 'REASON': disabledCommand.reason });
 
 		try {
 			// Execute the individual button interaction
-			buttons.get(customId).execute(interaction);
+			client.buttons.get(customId).execute(interaction);
 		}
 		catch (error) {
 			// Prints the error to the console
@@ -115,15 +118,15 @@ client.on('interactionCreate', async interaction => {
 		// Get the custom id of the select menu interaction
 		const customId = interaction.customId.split(',')[0];
 		// Returns if select menu does not exits
-		if (!selectMenus.has(customId)) return;
+		if (!client.selectMenus.has(customId)) return;
 
 		// Lookup if select menu is disabled by an admin
-		const disabledCommand = await models.DisabledCommands.findOne({ where: { commandName: selectMenus.get(customId).linkedCommand } });
+		const disabledCommand = await models.DisabledCommands.findOne({ where: { commandName: client.selectMenus.get(customId).linkedCommand } });
 		if (disabledCommand) return database.reply(interaction, 'COMMAND_DISABLED', { 'REASON': disabledCommand.reason });
 
 		try {
 			// Execute the individual select menu interaction
-			selectMenus.get(customId).execute(interaction);
+			client.selectMenus.get(customId).execute(interaction);
 		}
 		catch (error) {
 			// Prints the error to the console
@@ -132,19 +135,19 @@ client.on('interactionCreate', async interaction => {
 			database.reply(interaction, 'ERROR', { 'STACK': error.stack });
 		}
 	}
-	else if (interaction.isContextMenu()) {
-		// Get the custom id of the context menu interaction
-		const customId = interaction.customId.split(',')[0];
-		// Returns if context menu does not exits
-		if (!contextMenus.has(customId)) return;
+	else if (interaction.isMessageContextMenu()) {
+		// Get the command name of the interaction
+		const { commandName } = interaction;
+		// Returns if command does not exits
+		if (!client.contextMenus.has(commandName)) return;
 
 		// Lookup if context menu is disabled by an admin
-		const disabledCommand = await models.DisabledCommands.findOne({ where: { commandName: contextMenus.get(customId).linkedCommand } });
+		const disabledCommand = await models.DisabledCommands.findOne({ where: { commandName: commandName } });
 		if (disabledCommand) return database.reply(interaction, 'COMMAND_DISABLED', { 'REASON': disabledCommand.reason });
 
 		try {
 			// Execute the individual context menu interaction
-			contextMenus.get(customId).execute(interaction);
+			client.contextMenus.get(commandName).execute(interaction);
 		}
 		catch (error) {
 			// Prints the error to the console
