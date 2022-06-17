@@ -9,7 +9,7 @@ module.exports = {
 		await (await database.getSettings(interaction.guild)).destroy();
 
 		// Update the interactions reply embed to the new settings
-		interaction.update({ embeds: [ await require('../commands/settings').getEmbed(interaction.guild) ] });
+		interaction.editReply({ embeds: [ await require('../commands/settings').getEmbed(interaction.guild) ] });
 		database.reply(interaction, 'RESET_ALL_SETTINGS', null, false);
 	},
 };
