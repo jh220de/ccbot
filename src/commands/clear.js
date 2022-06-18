@@ -16,6 +16,7 @@ module.exports = {
 		.addUserOption(option => option.setName('user').setDescription('Filter messages from a specific user'))
 		.addRoleOption(option => option.setName('role').setDescription('Filter messages from a specific role'))
 		.addBooleanOption(option => option.setName('bot').setDescription('Filter messages sent by bots')),
+	/** @param {import('discord.js').CommandInteraction} interaction */
 	async execute(interaction) {
 		// Get the database connection
 		const database = new (require('../database'))();

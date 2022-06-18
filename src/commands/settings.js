@@ -7,6 +7,7 @@ module.exports = {
 		.setDescription('⚙️ Server-specific settings of the bot')
 		.setDefaultMemberPermissions(Permissions.FLAGS.MANAGE_GUILD)
 		.setDMPermission(false),
+	/** @param {import('discord.js').CommandInteraction} interaction */
 	async execute(interaction) {
 		// Get the database connection
 		const database = new (require('../database'))();
@@ -14,6 +15,7 @@ module.exports = {
 		interaction.editReply({ embeds: [ await this.getEmbed(interaction.guild) ], components: await this.getComponents() });
 		database.reply(interaction, 'SETTINGS_EMBED', null, false);
 	},
+	/** @param {import('discord.js').Guild} guild */
 	async getEmbed(guild) {
 		// Get the settings for the specified guild id
 		const settings = await new (require('../database'))().getSettings(guild);

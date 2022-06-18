@@ -5,6 +5,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('vote')
 		.setDescription('✨ Vote for this bot and get exclusive features!'),
+	/** @param {import('discord.js').CommandInteraction} interaction */
 	async execute(interaction) {
 		// Get the database connection
 		const database = new (require('../database'))();

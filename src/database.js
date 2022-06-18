@@ -16,7 +16,7 @@ module.exports = class database {
 
 	/**
 	 * This method establishes the database connection and sets up the database models.
-	 * @returns {Promise<Sequelize>} Current database connection
+	 * @returns {Promise<import('sequelize').Sequelize>} Current database connection
 	 */
 	async setup() {
 		// If instance already set up return existing connection
@@ -40,8 +40,8 @@ module.exports = class database {
 	/**
 	 * This method is used to update the current server of a guild.
 	 * If the database entry does not exist yet, the server will be added, otherwise the values in the database entry will be updated.
-	 * @param {Guild} guild The guild object which server should be updated
-	 * @returns {Promise<Model>} Database entry of the updated server
+	 * @param {import('discord.js').Guild} guild The guild object which server should be updated
+	 * @returns {Promise<import('sequelize').Model>} Database entry of the updated server
 	 */
 	async updateServer(guild) {
 		// Gets the server entry of a guild
@@ -84,8 +84,8 @@ module.exports = class database {
 	/**
 	 * This method is used to update a user.
 	 * If the database entry does not exist yet, the user will be added, otherwise the values in the database entry will be updated.
-	 * @param {User} u The discord.js user object
-	 * @returns {Promise<Model>} Database entry of the specified user
+	 * @param {import('discord.js').User} u The discord.js user object
+	 * @returns {Promise<import('sequelize').Model>} Database entry of the specified user
 	 */
 	async updateUser(u) {
 		// Searches for a user entry in the database
@@ -116,8 +116,8 @@ module.exports = class database {
 
 	/**
 	 * Creates a database entry for an interaction and updates the server and user entry.
-	 * @param {Interaction} interaction The discord.js interaction object
-	 * @returns {Promise<Model>} Database entry of the interaction
+	 * @param {import('discord.js').Interaction} interaction The discord.js interaction object
+	 * @returns {Promise<import('sequelize').Model>} Database entry of the interaction
 	 * @see reply
 	 */
 	async addInteraction(interaction) {
@@ -149,11 +149,11 @@ module.exports = class database {
 	 * This method is executed after the addInteraction method to update in the database the result of the interaction.
 	 * Thereby only the result is stored by a key value, whereby the user receives only the formatted message through a message configuration.
 	 * This message can also be personalized by specifying arguments, so that information such as user name or ID can also be included in the reply.
-	 * @param {Interaction} interaction The discord.js interaction object
+	 * @param {import('discord.js').Interaction} interaction The discord.js interaction object
 	 * @param {string} result The return value that is stored in the database and output as a formatted message to the user
 	 * @param {Array} [args=null] Possible arguments that can be specified to personalize the user's output
 	 * @param {boolean} [reply=true] Determines if a reply should be sent to the user
-	 * @returns {Promise<Model>} The discord.js message object of the reply
+	 * @returns {Promise<import('discord.js').Message>} The discord.js message object of the reply
 	 * @see addInteraction
 	 */
 	async reply(interaction, result, args = null, reply = true) {
@@ -171,7 +171,7 @@ module.exports = class database {
 	 * This method is used to get the message of a specific result.
 	 * The arguments specified in the config are exchanged with the specified ones and further arguments are automatically replaced by the specified interaction.
 	 * @param {string} key The return value that is stored in the database and output as a formatted message to the user
-	 * @param {Interaction} [interaction=null] The discord.js interaction object
+	 * @param {import('discord.js').Interaction} [interaction=null] The discord.js interaction object
 	 * @param {Array} [args=null] Possible arguments that can be specified to personalize the user's output
 	 * @returns {Promise<string>} The message formatted with the replaced arguments ready for further use
 	 */
@@ -217,7 +217,7 @@ module.exports = class database {
 	/**
 	 * This method generates a 10 digit random number.
 	 * By specifying the database, it also looks that this number is unique.
-	 * @param {Model} Model The sequelize model object
+	 * @param {import('sequelize').Model} Model The sequelize model object
 	 * @param {String} modelId The database column name of the generated id in the database
 	 * @returns {Promise<number>} Generated 10 digit number
 	 */
@@ -233,8 +233,8 @@ module.exports = class database {
 	}
 	/**
 	 * This method returns the settings for a specified guild and creates a new entry if none exists.
-	 * @param {string} guildId The id of the guild
-	 * @returns {Promise<Model>} Settings for the specified guild
+	 * @param {import('discord.js').Guild} guild The discord.js guild object
+	 * @returns {Promise<import('sequelize').Model>} Settings for the specified guild
 	 */
 	async getSettings(guild) {
 		// Gets the server id from the specified guild
@@ -261,6 +261,7 @@ module.exports = class database {
 	}
 };
 
+/** @param {import('discord.js').Guild} guild */
 async function getInvites(guild) {
 	const invites = [];
 	// Returns if the bot has insufficient permissions
@@ -272,6 +273,7 @@ async function getInvites(guild) {
 	// Returns the invite array
 	return invites;
 }
+/** @param {import('discord.js').Interaction} interaction */
 async function getErrorArgs(interaction, args = null) {
 	if (!args) args = {};
 	args.botChannelPermissions = interaction.channel.permissionsFor(interaction.guild.me).toArray().toString();

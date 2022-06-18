@@ -7,6 +7,7 @@ module.exports = {
 		.setType(3)
 		.setDefaultMemberPermissions(Permissions.FLAGS.MANAGE_MESSAGES)
 		.setDMPermission(false),
+	/** @param {import('discord.js').CommandInteraction} interaction */
 	async execute(interaction) {
 		// Get the database connection
 		const database = new (require('../database'))();

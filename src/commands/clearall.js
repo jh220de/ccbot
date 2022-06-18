@@ -7,6 +7,7 @@ module.exports = {
 		.setDescription('♻️ Clears all messages in a channel')
 		.setDefaultMemberPermissions(Permissions.FLAGS.MANAGE_CHANNELS)
 		.setDMPermission(false),
+	/** @param {import('discord.js').CommandInteraction} interaction */
 	async execute(interaction) {
 		// Get the database connection
 		const database = new (require('../database'))();

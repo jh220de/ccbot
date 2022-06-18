@@ -2,6 +2,7 @@ module.exports = {
 	name: 'ready',
 	once: true,
 	/* eslint-disable no-unused-vars */
+	/** @param {import('discord.js').Client} client */
 	async execute(client) {
 		// Create database instance and setup a new connection to it
 		await new (require('../database'))().setup();

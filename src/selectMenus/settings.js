@@ -1,6 +1,7 @@
 module.exports = {
 	id: 'toggleSetting',
 	linkedCommand: 'settings',
+	/** @param {import('discord.js').Interaction} interaction */
 	async execute(interaction) {
 		// Get the database connection
 		const database = new (require('../database'))();

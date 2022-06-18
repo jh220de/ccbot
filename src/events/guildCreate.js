@@ -1,5 +1,6 @@
 module.exports = {
 	name: 'guildCreate',
+	/** @param {import('discord.js').Guild} guild */
 	async execute(guild) {
 		// Returns if bot is not ready
 		if (!(new (require('../database'))().getConnection())) return;
