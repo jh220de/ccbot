@@ -141,7 +141,6 @@ module.exports = class database {
 			userId: interaction.user.id,
 			command: command,
 			result: 'WAITING_FOR_RESPONSE',
-			args: JSON.stringify(await getErrorArgs(interaction)),
 		});
 	}
 
