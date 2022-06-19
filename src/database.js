@@ -131,13 +131,15 @@ module.exports = class database {
 		const serverId = interaction.inGuild() ? (await this.updateServer(interaction.guild)).serverId : null;
 		// Return command name and args if command interaction otherwise save custom id
 		const command = interaction.isCommand() || interaction.isMessageContextMenu() ? interaction.toString() : interaction.customId.split(',').toString();
+		// Gets the channel name if one exists
+		const channelName = interaction.channel.name ? interaction.channel.name : null;
 
 		// Creates a database entry for the interaction
 		return await Interaction.create({
 			interactionId: interaction.id,
 			serverId: serverId,
 			channelId: interaction.channelId,
-			channelName: interaction.channel.name,
+			channelName: channelName,
 			userId: interaction.user.id,
 			command: command,
 			result: 'WAITING_FOR_RESPONSE',
