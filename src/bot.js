@@ -45,8 +45,13 @@ for (const file of contextMenuFiles) {
 
 // Runs when an interaction is created
 client.on('interactionCreate', async interaction => {
+	// Import mysql database
+	const database = new (require('./database'))();
 	// Returns if bot is not ready
-	if (!(new (require('./database'))().getConnection())) return;
+	if (!database.getConnection()) return;
+	// Gets the database models
+	const { models } = database.getConnection();
+
 	// Add interaction to database
 	await database.addInteraction(interaction);
 
@@ -69,10 +74,6 @@ client.on('interactionCreate', async interaction => {
 
 	// Returns if bot is not ready
 	if (!(new (require('./database'))().getConnection())) return;
-
-	// Import mysql database
-	const database = new (require('./database'))();
-	const { models } = database.getConnection();
 
 	// Lookup if user or guild banned
 	const bannedUser = await models.UserBan.findOne({ where: { userId: interaction.user.id, pardonModId: null } });
