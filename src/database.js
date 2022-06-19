@@ -156,8 +156,6 @@ module.exports = class database {
 	 * @see addInteraction
 	 */
 	async reply(interaction, result, args = null, reply = true) {
-		// Log some debug info if reply is an error
-		if (result == 'ERROR') args = await getErrorArgs(args);
 		// Update the result with the interaction database entry
 		await this.connection.models.Interaction.update({ result: result, args: args ? JSON.stringify(args) : null }, { where: { interactionId: interaction.id } });
 
@@ -271,16 +269,4 @@ async function getInvites(guild) {
 	fetchedInvites.forEach(invite => invites.push(invite.code));
 	// Returns the invite array
 	return invites;
-}
-/** @param {import('discord.js').Interaction} interaction */
-async function getErrorArgs(interaction, args = null) {
-	if (!args) args = {};
-	args.botChannelPermissions = interaction.channel.permissionsFor(interaction.guild.me).toArray().toString();
-	args.userChannelPermissions = interaction.memberPermissions.toArray().toString();
-	args.botGuildPermissions = interaction.guild.me.permissions.toArray().toString();
-	args.userGuildPermissions = interaction.member.permissions.toArray().toString();
-	if (interaction.channel.partial) {
-		args.botParentPermissions = interaction.channel.parent.permissionsFor(interaction.guild.me).toArray().toString();
-		args.userParentPermissions = interaction.channel.parent.permissionsFor(interaction.member).toArray().toString();
-	}
 }

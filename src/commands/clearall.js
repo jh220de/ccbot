@@ -21,8 +21,8 @@ module.exports = {
 		// Check if the bot has enough permissions to delete the channel
 		let permissions = interaction.channel.permissionsFor(interaction.guild.me);
 		if (!permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
-			if (!permissions.has(Permissions.FLAGS.VIEW_CHANNEL)) return database.reply(interaction, 'BOT_NO_PERMS', { 'PERMISSION': 'VIEW_CHANNEL' });
-			if (!permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) return database.reply(interaction, 'BOT_NO_PERMS', { 'PERMISSION': 'MANAGE_CHANNELS' });
+			if (!permissions.has(Permissions.FLAGS.VIEW_CHANNEL)) return database.reply(interaction, 'BOT_NO_PERMS', { PERMISSION: 'VIEW_CHANNEL' });
+			if (!permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) return database.reply(interaction, 'BOT_NO_PERMS', { PERMISSION: 'MANAGE_CHANNELS' });
 			if (!interaction.channel.deletable) return database.reply(interaction, 'CHANNEL_NOT_DELETABLE');
 			// Check if the bot has enough permissions to clone the channel
 			let type = 'GUILD';
@@ -31,10 +31,10 @@ module.exports = {
 				type = 'PARENT';
 				permissions = interaction.channel.parent.permissionsFor(interaction.guild.me);
 			}
-			if (!permissions.has(Permissions.FLAGS.VIEW_CHANNEL)) return database.reply(interaction, 'BOT_NO_PERMS', { 'PERMISSION': `VIEW_CHANNEL_${type}` });
-			if (!permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) return database.reply(interaction, 'BOT_NO_PERMS', { 'PERMISSION': `MANAGE_CHANNELS_${type}` });
+			if (!permissions.has(Permissions.FLAGS.VIEW_CHANNEL)) return database.reply(interaction, 'BOT_NO_PERMS', { PERMISSION: `VIEW_CHANNEL_${type}` });
+			if (!permissions.has(Permissions.FLAGS.MANAGE_CHANNELS)) return database.reply(interaction, 'BOT_NO_PERMS', { PERMISSION: `MANAGE_CHANNELS_${type}` });
 			if (settings.showreply && !permissions.has(Permissions.FLAGS.SEND_MESSAGES))
-				return database.reply(interaction, 'BOT_NO_PERMS', { 'PERMISSION': `SEND_MESSAGES_${type}` });
+				return database.reply(interaction, 'BOT_NO_PERMS', { PERMISSION: `SEND_MESSAGES_${type}` });
 		}
 
 		// Clones the channel

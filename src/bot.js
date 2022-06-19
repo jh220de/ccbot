@@ -45,14 +45,25 @@ for (const file of contextMenuFiles) {
 
 // Runs when an interaction is created
 client.on('interactionCreate', async interaction => {
+	// Add interaction to database
+	await database.addInteraction(interaction);
+
 	// Return if interaction is unknown
-	if (!interaction.isRepliable()) return;
+	if (!interaction.isRepliable()) return database.reply(interaction, 'ERROR', { REASON: 'INTERACTION_NOT_REPLIABLE' });
 	// Defer reply to prevent timeout errors
-	if (interaction.isCommand() || interaction.isMessageContextMenu())
-		await interaction.deferReply({ ephemeral: true });
-	else if (interaction.isButton() || interaction.isSelectMenu())
-		await interaction.deferUpdate({ ephemeral: true });
-	else return;
+	try {
+		if (interaction.isCommand() || interaction.isMessageContextMenu())
+			await interaction.deferReply({ ephemeral: true });
+		else if (interaction.isButton() || interaction.isSelectMenu())
+			await interaction.deferUpdate({ ephemeral: true });
+		else return;
+	}
+	catch (error) {
+		// Prints the error to the console
+		console.error(`Error at ${interaction.id}:\n${error.stack}`);
+		// Update the result with the interaction database entry
+		database.reply(interaction, 'ERROR', { STACK: error.stack });
+	}
 
 	// Returns if bot is not ready
 	if (!(new (require('./database'))().getConnection())) return;
@@ -61,15 +72,12 @@ client.on('interactionCreate', async interaction => {
 	const database = new (require('./database'))();
 	const { models } = database.getConnection();
 
-	// Add interaction to database
-	database.addInteraction(interaction);
-
 	// Lookup if user or guild banned
 	const bannedUser = await models.UserBan.findOne({ where: { userId: interaction.user.id, pardonModId: null } });
-	if (bannedUser) return database.reply(interaction, 'USER_BANNED', { 'REASON': bannedUser.reason, 'BAN_ID': bannedUser.banId });
+	if (bannedUser) return database.reply(interaction, 'USER_BANNED', { REASON: bannedUser.reason, BAN_ID: bannedUser.banId });
 	if (interaction.inGuild()) {
 		const bannedGuild = await models.GuildBan.findOne({ where: { guildId: interaction.guildId, pardonModId: null } });
-		if (bannedGuild) return database.reply(interaction, 'GUILD_BANNED', { 'REASON': bannedUser.reason, 'BAN_ID': bannedGuild.banId });
+		if (bannedGuild) return database.reply(interaction, 'GUILD_BANNED', { REASON: bannedUser.reason, BAN_ID: bannedGuild.banId });
 	}
 
 	if (interaction.isCommand()) {
@@ -80,7 +88,7 @@ client.on('interactionCreate', async interaction => {
 
 		// Lookup if command is disabled by an admin
 		const disabledCommand = await models.DisabledCommands.findOne({ where: { commandName: commandName } });
-		if (disabledCommand) return database.reply(interaction, 'COMMAND_DISABLED', { 'REASON': disabledCommand.reason });
+		if (disabledCommand) return database.reply(interaction, 'COMMAND_DISABLED', { REASON: disabledCommand.reason });
 
 		try {
 			// Execute the individual command file
@@ -90,7 +98,7 @@ client.on('interactionCreate', async interaction => {
 			// Prints the error to the console
 			console.error(`Error at ${interaction.id}:\n${error.stack}`);
 			// Update the result with the interaction database entry
-			database.reply(interaction, 'ERROR', { 'STACK': error.stack });
+			database.reply(interaction, 'ERROR', { STACK: error.stack });
 		}
 	}
 	else if (interaction.isButton()) {
@@ -101,7 +109,7 @@ client.on('interactionCreate', async interaction => {
 
 		// Lookup if button is disabled by an admin
 		const disabledCommand = await models.DisabledCommands.findOne({ where: { commandName: client.buttons.get(customId).linkedCommand } });
-		if (disabledCommand) return database.reply(interaction, 'COMMAND_DISABLED', { 'REASON': disabledCommand.reason });
+		if (disabledCommand) return database.reply(interaction, 'COMMAND_DISABLED', { REASON: disabledCommand.reason });
 
 		try {
 			// Execute the individual button interaction
@@ -111,7 +119,7 @@ client.on('interactionCreate', async interaction => {
 			// Prints the error to the console
 			console.error(`Error at ${interaction.id}:\n${error.stack}`);
 			// Update the result with the interaction database entry
-			database.reply(interaction, 'ERROR', { 'STACK': error.stack });
+			database.reply(interaction, 'ERROR', { STACK: error.stack });
 		}
 	}
 	else if (interaction.isSelectMenu()) {
@@ -122,7 +130,7 @@ client.on('interactionCreate', async interaction => {
 
 		// Lookup if select menu is disabled by an admin
 		const disabledCommand = await models.DisabledCommands.findOne({ where: { commandName: client.selectMenus.get(customId).linkedCommand } });
-		if (disabledCommand) return database.reply(interaction, 'COMMAND_DISABLED', { 'REASON': disabledCommand.reason });
+		if (disabledCommand) return database.reply(interaction, 'COMMAND_DISABLED', { REASON: disabledCommand.reason });
 
 		try {
 			// Execute the individual select menu interaction
@@ -132,7 +140,7 @@ client.on('interactionCreate', async interaction => {
 			// Prints the error to the console
 			console.error(`Error at ${interaction.id}:\n${error.stack}`);
 			// Update the result with the interaction database entry
-			database.reply(interaction, 'ERROR', { 'STACK': error.stack });
+			database.reply(interaction, 'ERROR', { STACK: error.stack });
 		}
 	}
 	else if (interaction.isMessageContextMenu()) {
@@ -143,7 +151,7 @@ client.on('interactionCreate', async interaction => {
 
 		// Lookup if context menu is disabled by an admin
 		const disabledCommand = await models.DisabledCommands.findOne({ where: { commandName: commandName } });
-		if (disabledCommand) return database.reply(interaction, 'COMMAND_DISABLED', { 'REASON': disabledCommand.reason });
+		if (disabledCommand) return database.reply(interaction, 'COMMAND_DISABLED', { REASON: disabledCommand.reason });
 
 		try {
 			// Execute the individual context menu interaction
@@ -153,7 +161,7 @@ client.on('interactionCreate', async interaction => {
 			// Prints the error to the console
 			console.error(`Error at ${interaction.id}:\n${error.stack}`);
 			// Update the result with the interaction database entry
-			database.reply(interaction, 'ERROR', { 'STACK': error.stack });
+			database.reply(interaction, 'ERROR', { STACK: error.stack });
 		}
 	}
 });

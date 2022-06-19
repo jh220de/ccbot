@@ -17,11 +17,11 @@ module.exports = {
 		// Check if the bot has enough permissions to clear the chat history
 		const permissions = interaction.channel.permissionsFor(interaction.guild.me);
 		if (!permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
-			if (!permissions.has(Permissions.FLAGS.VIEW_CHANNEL)) return database.reply(interaction, 'BOT_NO_PERMS', { 'PERMISSION': 'VIEW_CHANNEL' });
-			if (!permissions.has(Permissions.FLAGS.SEND_MESSAGES)) return database.reply(interaction, 'BOT_NO_PERMS', { 'PERMISSION': 'SEND_MESSAGES' });
-			if (!permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return database.reply(interaction, 'BOT_NO_PERMS', { 'PERMISSION': 'MANAGE_MESSAGES' });
+			if (!permissions.has(Permissions.FLAGS.VIEW_CHANNEL)) return database.reply(interaction, 'BOT_NO_PERMS', { PERMISSION: 'VIEW_CHANNEL' });
+			if (!permissions.has(Permissions.FLAGS.SEND_MESSAGES)) return database.reply(interaction, 'BOT_NO_PERMS', { PERMISSION: 'SEND_MESSAGES' });
+			if (!permissions.has(Permissions.FLAGS.MANAGE_MESSAGES)) return database.reply(interaction, 'BOT_NO_PERMS', { PERMISSION: 'MANAGE_MESSAGES' });
 			if (settings.showreply && !permissions.has(Permissions.FLAGS.SEND_MESSAGES))
-				return database.reply(interaction, 'BOT_NO_PERMS', { 'PERMISSION': 'SEND_MESSAGES' });
+				return database.reply(interaction, 'BOT_NO_PERMS', { PERMISSION: 'SEND_MESSAGES' });
 		}
 
 		// Fetch the context message from the interaction
@@ -37,7 +37,7 @@ module.exports = {
 		// Bulk delete messages
 		const messages = await interaction.channel.bulkDelete(fetched, true);
 		// Send reply to user and in chat if enabled
-		await database.reply(interaction, 'CLEARED_MESSAGES', { 'MESSAGE_AMOUNT': messages.size });
-		if (settings.showreply) interaction.channel.send(await database.getMessage('CLEARED_MESSAGES_BROADCAST', interaction, { 'MESSAGE_AMOUNT': messages.size, 'TARGET_ID': interaction.targetId }));
+		await database.reply(interaction, 'CLEARED_MESSAGES', { MESSAGE_AMOUNT: messages.size });
+		if (settings.showreply) interaction.channel.send(await database.getMessage('CLEARED_MESSAGES_BROADCAST', interaction, { MESSAGE_AMOUNT: messages.size, TARGET_ID: interaction.targetId }));
 	},
 };
