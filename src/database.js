@@ -132,7 +132,7 @@ module.exports = class database {
 		// Return command name and args if command interaction otherwise save custom id
 		const command = interaction.isCommand() || interaction.isMessageContextMenu() ? interaction.toString() : interaction.customId.split(',').toString();
 		// Gets the channel name if one exists
-		const channelName = interaction.channel.name ? interaction.channel.name : null;
+		const channelName = interaction.channel.type == 'GUILD_TEXT' ? interaction.channel.name : null;
 
 		// Creates a database entry for the interaction
 		return await Interaction.create({
