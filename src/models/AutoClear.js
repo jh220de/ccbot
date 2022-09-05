@@ -4,7 +4,7 @@ module.exports = class AutoClear extends Model {
 	static init(sequelize) {
 		return super.init({
 			channelId: {
-				type: DataTypes.STRING(18),
+				type: DataTypes.STRING(20),
 				primaryKey: true,
 			},
 			serverId: { type: DataTypes.STRING(10) },

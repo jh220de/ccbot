@@ -8,7 +8,7 @@ module.exports = class Vote extends Model {
 				autoIncrement: true,
 				primaryKey: true,
 			},
-			userId: { type: DataTypes.STRING(18) },
+			userId: { type: DataTypes.STRING(20) },
 		}, {
 			tableName: 'votes',
 			sequelize,

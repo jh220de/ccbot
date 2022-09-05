@@ -30,7 +30,7 @@ module.exports = class database {
 		for (const file of modelFiles) {
 			const Model = require(`./models/${file}`);
 			Model.init(this.connection);
-			Model.sync();
+			Model.sync({ alter: true });
 		}
 
 		// Returning the connection for further use
@@ -161,8 +161,8 @@ module.exports = class database {
 		// Update the result with the interaction database entry
 		await this.connection.models.Interaction.update({ result: result, args: args ? JSON.stringify(args) : null }, { where: { interactionId: interaction.id } });
 
-		// Returns if no reply should be sent
-		if (!reply) return;
+		// Returns if no reply should be sent or interaction not deferred
+		if (!(reply || interaction.deferred)) return;
 		// Replys to the defered interaction with replaced args
 		return await interaction.editReply(await this.getMessage(result, interaction, args));
 	}

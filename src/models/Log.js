@@ -3,8 +3,9 @@ const { DataTypes, Model } = require('sequelize');
 module.exports = class Interaction extends Model {
 	static init(sequelize) {
 		return super.init({
-			interactionId: {
-				type: DataTypes.STRING(20),
+			logId: {
+				type: DataTypes.INTEGER,
+				autoIncrement: true,
 				primaryKey: true,
 			},
 			serverId: { type: DataTypes.STRING(10) },
@@ -15,7 +16,7 @@ module.exports = class Interaction extends Model {
 			result: { type: DataTypes.STRING },
 			args: { type: DataTypes.TEXT },
 		}, {
-			tableName: 'interactions',
+			tableName: 'logs',
 			sequelize,
 		});
 	}

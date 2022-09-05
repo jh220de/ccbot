@@ -66,10 +66,8 @@ client.on('interactionCreate', async interaction => {
 		else return;
 	}
 	catch (error) {
-		// Prints the error to the console
-		console.error(`Error at ${interaction.id}:\n${error.stack}`);
 		// Update the result with the interaction database entry
-		database.reply(interaction, 'ERROR', { STACK: error.stack });
+		database.reply(interaction, 'ERROR', { STACK: error.stack }, false);
 	}
 
 	// Returns if bot is not ready
@@ -98,8 +96,6 @@ client.on('interactionCreate', async interaction => {
 			client.commands.get(commandName).execute(interaction);
 		}
 		catch (error) {
-			// Prints the error to the console
-			console.error(`Error at ${interaction.id}:\n${error.stack}`);
 			// Update the result with the interaction database entry
 			database.reply(interaction, 'ERROR', { STACK: error.stack });
 		}
@@ -119,8 +115,6 @@ client.on('interactionCreate', async interaction => {
 			client.buttons.get(customId).execute(interaction);
 		}
 		catch (error) {
-			// Prints the error to the console
-			console.error(`Error at ${interaction.id}:\n${error.stack}`);
 			// Update the result with the interaction database entry
 			database.reply(interaction, 'ERROR', { STACK: error.stack });
 		}
@@ -140,8 +134,6 @@ client.on('interactionCreate', async interaction => {
 			client.selectMenus.get(customId).execute(interaction);
 		}
 		catch (error) {
-			// Prints the error to the console
-			console.error(`Error at ${interaction.id}:\n${error.stack}`);
 			// Update the result with the interaction database entry
 			database.reply(interaction, 'ERROR', { STACK: error.stack });
 		}
@@ -161,8 +153,6 @@ client.on('interactionCreate', async interaction => {
 			client.contextMenus.get(commandName).execute(interaction);
 		}
 		catch (error) {
-			// Prints the error to the console
-			console.error(`Error at ${interaction.id}:\n${error.stack}`);
 			// Update the result with the interaction database entry
 			database.reply(interaction, 'ERROR', { STACK: error.stack });
 		}

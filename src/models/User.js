@@ -4,7 +4,7 @@ module.exports = class User extends Model {
 	static init(sequelize) {
 		return super.init({
 			userId: {
-				type: DataTypes.STRING(18),
+				type: DataTypes.STRING(20),
 				primaryKey: true,
 			},
 			userName: { type: DataTypes.STRING(32) },

@@ -8,7 +8,7 @@ module.exports = class DisabledCommands extends Model {
 				primaryKey: true,
 			},
 			reason: { type: DataTypes.STRING(1000) },
-			modId: { type: DataTypes.STRING(18) },
+			modId: { type: DataTypes.STRING(20) },
 		}, {
 			tableName: 'disabled_commands',
 			sequelize,
