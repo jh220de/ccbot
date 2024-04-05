@@ -1,15 +1,9 @@
 const { ShardingManager } = require('discord.js');
+const { token } = require('./config.json');
 
-// Creates the sharding manager instance
-const manager = new ShardingManager('./src/bot.js', {
-	token: require('../config.json').token,
-	mode: 'worker',
-});
+const manager = new ShardingManager('./bot.js', { token: token });
 
-// Enable TopGG stats posting and vote listening if set up in config
-if (require('../config.json').topgg.enabled) require('./topgg').start(manager);
 
-// Runs when a shard is getting started
 manager.on('shardCreate', shard => {
 	let start;
 	shard.on('spawn', () => {
@@ -21,12 +15,11 @@ manager.on('shardCreate', shard => {
 		console.log(`Shard ${shard.id + 1} started! Startup process took ${time}ms`);
 	});
 	shard.on('reconnection', () => console.log(`Reconnecting shard ${shard.id + 1}...`));
-	shard.on('death', () => console.log(`Died shard ${shard.id + 1}!`));
+	shard.on('death', () => console.log(`Shard ${shard.id + 1} died!`));
 	shard.on('error', error => {
 		console.log(`Error shard ${shard.id + 1}:\n${error}`);
 		shard.respawn();
 	});
 });
 
-// Spawns the different shards
-manager.spawn({ timeout: -1 }).catch(error => console.log(error));
+manager.spawn();
