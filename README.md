@@ -1,5 +1,5 @@
 # [ClearChat Bot](https://jh220.de/projects/ccbot) v4.1 [![Verified](https://i.ibb.co/yW5HSRC/verified.png)](https://go.jh220.de/cc-invite)
-[![License](https://img.shields.io/badge/license-AGPL--3.0-blue)](./LICENSE) ![Version](https://img.shields.io/badge/npm-v16.14.2-blue) [![Discord](https://img.shields.io/discord/789235487676170261?label=discord)](https://discord.gg/4UPT6kCCCY) [![Matrix](https://img.shields.io/badge/matrix-join%20now-success)](https://matrix.to/#/#ccbot:jh220.de) [![Servers](https://top.gg/api/widget/servers/787789079227006976.svg)](https://top.gg/bot/787789079227006976)
+[![License](https://img.shields.io/badge/license-AGPL--3.0-blue)](./LICENSE) ![Version](https://img.shields.io/badge/npm-v16.14.2-blue) [![Discord](https://img.shields.io/discord/789235487676170261?label=discord)](https://discord.gg/4UPT6kCCCY) [![Servers](https://top.gg/api/widget/servers/787789079227006976.svg)](https://top.gg/bot/787789079227006976)
 
 A feature-rich Discord moderation bot for channel management and moderation.
 
@@ -13,7 +13,7 @@ Since [we](https://github.com/jh220de/ccbot/graphs/contributors) were also missi
 We offer a **sharded and verified** public **hosted** version of the **ClearChat bot** to reach the largest possible user base.
 
 
-This **sharded instance** is completely **free of charge** and offers free **support** on our [Discord](https://go.jh220.de/cc-help) and [Matrix](https://matrix.to/#/#ccbot:jh220.de) server.
+This **sharded instance** is completely **free of charge** and offers free **support** on our [Discord](https://go.jh220.de/cc-help) server.
 
 [![Top.GG](https://top.gg/api/widget/787789079227006976.svg)](https://go.jh220.de/cc-invite)
 
