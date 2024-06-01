@@ -18,7 +18,7 @@ module.exports = {
 			await interaction.channel.delete();
 		}
 		catch (error) {
-			console.error(error);
+			interaction.client.error(error);
 			return await interaction.reply({ content: 'There was an error while clearing this channel\nPlease check if the bot has all the neccessary permissions!', ephemeral: true });
 		}
 

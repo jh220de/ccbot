@@ -26,6 +26,15 @@ if (log.webhook)
             webhookURL: log.webhook,
         },
     });
+if (log.logtail) {
+    targets.push({
+        target: '@logtail/pino',
+        level: log.level,
+        options: {
+            sourceToken: log.logtail,
+        },
+    });
+}
 const logger = pino({ level: log.level }, pino.transport({ targets: targets }));
 process.on('SIGTERM', () => {
     logger.error('SIGTERM received.');

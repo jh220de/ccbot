@@ -7,7 +7,8 @@ Important: This file/data is only for illustration purposes to show how the actu
     "adminServerId": "789235487676170261",
     "log": {
         "level": "debug", // Lowest debug level (for example debug or info)
-        "webhook": "https://discord.com/api/webhooks/1234567890398242133/Q7uhb8amYfQ2LFJKwmrD.xQ5RDWuHgqcsK4QNv5aG8e2AHE9rLHcX3zEPgVwbwLw4Ape"
+        "webhook": "https://discord.com/api/webhooks/1234567890398242133/Q7uhb8amYfQ2LFJKwmrD.xQ5RDWuHgqcsK4QNv5aG8e2AHE9rLHcX3zEPgVwbwLw4Ape",
+        "logtail": "INSERT_YOUR_BETTERSTACK_LOGTAIL_TOKEN_HERE"
     },
     "topgg": {
         "enabled": false,

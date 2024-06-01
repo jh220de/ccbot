@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const node_fs_1 = require("node:fs");
 const node_path_1 = require("node:path");
-const { clientId, token, adminServerId } = require('./config.json');
+const { clientId, token, adminServerId } = require('../config.json');
 const commands = [];
 const foldersPath = (0, node_path_1.join)(__dirname, 'commands');
 const commandFolders = (0, node_fs_1.readdirSync)(foldersPath);

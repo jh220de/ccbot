@@ -6,6 +6,7 @@
   "scripts": {
     "prod": "node .",
     "dev": "nodemon",
+    "deploy": "node dist/deploy-commands.js",
     "build": "tsc",
     "watch": "tsc -w",
     "validate": "eslint . --ignore-pattern \"dist/*\"",
@@ -24,6 +25,7 @@
   },
   "homepage": "https://github.com/JH220de/ccbot#readme",
   "dependencies": {
+    "@logtail/pino": "^0.4.21",
     "discord.js": "^14.15.2",
     "mysql2": "^3.10.0",
     "pino": "^9.1.0",

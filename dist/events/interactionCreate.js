@@ -8,10 +8,10 @@ module.exports = {
             return;
         const command = interaction.client.commands.get(interaction.commandName);
         if (!command) {
-            console.error(`No command matching ${interaction.commandName} was found.`);
+            interaction.client.error(`No command matching ${interaction.commandName} was found.`);
             return;
         }
-        const database = new (require('./database'))();
+        const database = new (require('../database'))();
         if (!database.getConnection())
             return;
         const { models } = database.getConnection();
@@ -28,7 +28,7 @@ module.exports = {
             await command.execute(interaction);
         }
         catch (error) {
-            console.error(error);
+            interaction.client.error(error);
             try {
                 if (interaction.replied || interaction.deferred) {
                     await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
@@ -38,7 +38,7 @@ module.exports = {
                 }
             }
             catch {
-                console.error('Failed to deliver the error message to the user.');
+                interaction.client.error('Failed to deliver the error message to the user.');
             }
         }
     },

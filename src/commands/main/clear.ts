@@ -38,7 +38,7 @@ module.exports = {
 			await interaction.reply(`Successfully deleted ${messages.size} messages.`);
 		}
 		catch (error) {
-			console.error(error);
+			interaction.client.error(error);
 			await interaction.reply({ content: 'There was an error while clearing messages\nPlease check if the bot has all the neccessary permissions!', ephemeral: true });
 		}
 	},
