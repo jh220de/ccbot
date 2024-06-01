@@ -2,10 +2,14 @@
   "name": "clearchatbot",
   "version": "4.0.0",
   "description": "A feature-rich moderation bot of your Discord server for channel management and structuring your chat.",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "scripts": {
     "prod": "node .",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "validate": "eslint . --ignore-pattern \"dist/*\"",
+    "lint": "eslint . --ignore-pattern \"dist/*\" --fix"
   },
   "repository": {
     "type": "git",
@@ -20,10 +24,20 @@
   },
   "homepage": "https://github.com/JH220de/ccbot#readme",
   "dependencies": {
-    "discord.js": "^14.14.1"
+    "discord.js": "^14.15.2",
+    "mysql2": "^3.10.0",
+    "pino": "^9.1.0",
+    "pino-discord-webhook": "^0.1.1",
+    "sequelize": "^6.37.3",
+    "topgg-autoposter": "^2.0.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.4.0",
+    "@types/eslint__js": "^8.42.3",
     "eslint": "^8.57.0",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "pino-pretty": "^11.1.0",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.11.0"
   }
 }

@@ -1,5 +1,5 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const { EmbedBuilder } = require('discord.js');
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { EmbedBuilder } from 'discord.js';
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -8,7 +8,7 @@ module.exports = {
 	/** @param {import('discord.js').CommandInteraction} interaction */
 	async execute(interaction) {
 		interaction.reply({ embeds: [ new EmbedBuilder()
-			.setColor('00FFFF')
+			.setColor('#00FFFF')
 			.setTitle('ClearChat-Bot Vote Infos ✨')
 			.setDescription(`
             Hey, you can vote via [this link](https://jh220.de/cc/vote).
