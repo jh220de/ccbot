@@ -4,7 +4,7 @@ import { join } from 'node:path';
 const { clientId, token, adminServerId } = require('../config.json');
 
 const commands : any = [];
-const foldersPath = join(__dirname, 'commands');
+const foldersPath = join(__dirname, '../commands');
 const commandFolders = readdirSync(foldersPath);
 
 for (const folder of commandFolders) {
@@ -40,7 +40,7 @@ const rest = new REST().setToken(token);
 
 		await rest.put(
 			Routes.applicationGuildCommands(clientId, adminServerId),
-			{ body: [require('./commands/utility/admin').data.toJSON()] },
+			{ body: [require('../commands/utility/admin').data.toJSON()] },
 		) as any[];
 
 		console.log('Successfully registered admin command.');

@@ -1,8 +1,7 @@
-import { readdirSync } from 'node:fs';
-import { join } from 'node:path';
 import { Client, Collection, GatewayIntentBits } from 'discord.js';
+import { Logger } from './utils/logger';
 
-class CustomClient extends Client {
+export class CustomClient extends Client implements Logger {
 	commands: Collection<string, any>;
 
 	log(message) {
@@ -20,43 +19,11 @@ class CustomClient extends Client {
 	}
 }
 
-
-const { token } = require('../config.json');
-
 const client: CustomClient = new CustomClient({ intents: [GatewayIntentBits.Guilds] });
 
-client.commands = new Collection<string, any>();
-const foldersPath = join(__dirname, 'commands');
-const commandFolders = readdirSync(foldersPath);
+import fileLoader from './utils/file-loader';
+fileLoader.loadCommands(client);
+fileLoader.loadEvents(client);
 
-for (const folder of commandFolders) {
-	const commandsPath = join(foldersPath, folder);
-	const commandFiles = readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-	for (const file of commandFiles) {
-		const filePath = join(commandsPath, file);
-		const command = require(filePath);
-		if ('data' in command && 'execute' in command) {
-			client.commands.set(command.data.name, command);
-		}
-		else {
-			client.warn(`The command at ${filePath} is missing a required "data" or "execute" property.`);
-		}
-	}
-}
-
-const eventsPath = join(__dirname, 'events');
-const eventFiles = readdirSync(eventsPath).filter(file => file.endsWith('.js'));
-
-for (const file of eventFiles) {
-	const filePath = join(eventsPath, file);
-	const event = require(filePath);
-	if (event.once) {
-		client.once(event.name, (...args) => event.execute(...args));
-	}
-	else {
-		client.on(event.name, (...args) => event.execute(...args));
-	}
-}
-
+const token : string = require('../config.json').token;
 client.login(token);
-

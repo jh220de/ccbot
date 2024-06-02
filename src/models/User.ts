@@ -1,7 +1,9 @@
+import { Sequelize } from 'sequelize';
+
 const { DataTypes, Model } = require('sequelize');
 
 module.exports = class User extends Model {
-	static init(sequelize) {
+	static init(sequelize : Sequelize) {
 		return super.init({
 			userId: {
 				type: DataTypes.STRING(18),

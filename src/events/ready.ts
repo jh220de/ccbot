@@ -4,7 +4,7 @@ module.exports = {
 	name: Events.ClientReady,
 	once: true,
 	async execute(client) {
-		await new (require('../database'))().setup(client);
+		await new (require('../utils/database'))().setup(client);
 
 		setTimeout(() => setActivity(client), 1000);
 		setInterval(() => setActivity(client), 30000);

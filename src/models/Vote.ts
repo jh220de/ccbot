@@ -1,7 +1,9 @@
+import { Sequelize } from 'sequelize';
+
 const { DataTypes, Model } = require('sequelize');
 
 module.exports = class Vote extends Model {
-	static init(sequelize) {
+	static init(sequelize : Sequelize) {
 		return super.init({
 			voteId: {
 				type: DataTypes.INTEGER,
