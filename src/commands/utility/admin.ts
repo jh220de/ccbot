@@ -12,10 +12,8 @@ module.exports = {
 			.addStringOption(option => option.setName('id').setDescription('Enter an interaction, server, guild, user or ban ID here.').setRequired(true)),
 		),
 	async execute(interaction) {
-		const database = new (require('../database'))();
+		const database = new (require('../../utils/database'))();
 		const { models } = database.getConnection();
-
-		return interaction.reply('This command is disabled for now.');
 
 		switch (interaction.options.getSubcommand()) {
 		case 'get': {

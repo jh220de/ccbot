@@ -13,14 +13,19 @@ module.exports = {
 		}
 
 		const database = new (require('../utils/database'))();
-		if (!database.getConnection()) return;
+		if (!database.getConnection()) {
+			interaction.client.error(`[Interaction ${interaction.id}] Failed to connect to the database.`);
+			interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+			return;
+		}
 		const { models } = database.getConnection();
 
 		try {
-			database.addInteraction(interaction);
+			await database.addInteraction(interaction);
 		}
 		catch (error) {
-			interaction.client.error(error);
+			interaction.client.error(`[Interaction ${interaction.id}] Failed to add interaction to the database`);
+			interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 			return;
 		}
 
@@ -35,7 +40,7 @@ module.exports = {
 			await command.execute(interaction);
 		}
 		catch (error) {
-			interaction.client.error(error);
+			interaction.client.error(`[Interaction ${interaction.id}] ${error.message}`);
 			try {
 				if (interaction.replied || interaction.deferred) {
 					await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
@@ -45,7 +50,7 @@ module.exports = {
 				}
 			}
 			catch {
-				interaction.client.error('Failed to deliver the error message to the user.');
+				interaction.client.error(`[Interaction ${interaction.id}] Failed to deliver the error message to the user.`);
 			}
 		}
 	},

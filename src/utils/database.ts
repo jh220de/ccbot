@@ -38,7 +38,7 @@ module.exports = class database {
 		await this.updateUser(interaction.user);
 		if (interaction.inGuild()) await this.updateServer(interaction.guild);
 
-		return await Interaction.create({
+		const dbInteraction : Model = await Interaction.create({
 			interactionId: interaction.id,
 			serverId: interaction.inGuild() ? interaction.guildId : null,
 			channelId: interaction.channelId,
@@ -47,6 +47,8 @@ module.exports = class database {
 			command: interaction.toString(),
 			result: 'WAITING_FOR_RESPONSE',
 		});
+		this.logger.debug(`[Interaction ${interaction.id}] Added to database.`);
+		return dbInteraction;
 	}
 
 	async reply(interaction : ChatInputCommandInteraction, result : string, args : Array<any> = null, reply : boolean = true) : Promise<boolean> {
@@ -56,9 +58,9 @@ module.exports = class database {
 		const dbInteraction : Model = await Interaction.findOne({ where: { interactionId: interaction.id } });
 
 		if (!dbInteraction) {
-			this.logger.warn(`Interaction ${interaction.id} not found in database.`);
+			this.logger.warn(`[Interaction ${interaction.id}] Not found in database while replying.`);
 			if (!await this.addInteraction(interaction)) {
-				this.logger.error(`Failed to add interaction ${interaction.id} to database.`);
+				this.logger.error(`[Interaction ${interaction.id}] Failed to add interaction to database while replying.`);
 				return false;
 			}
 		}
@@ -71,7 +73,7 @@ module.exports = class database {
 			message = await this.getMessage(result, interaction, args);
 		}
 		catch (error) {
-			this.logger.error(`Failed to get message for ${result}.`);
+			this.logger.error(`[Interaction ${interaction.id}] Failed to get message for ${result}.`);
 			return false;
 		}
 
@@ -80,7 +82,7 @@ module.exports = class database {
 		else if (interaction.isRepliable()) await interaction.reply({ content: message, ephemeral: true });
 		else return false;
 
-		this.logger.debug(`Replied to interaction ${interaction.id} with message ${result}.`);
+		this.logger.debug(`[Interaction ${interaction.id}] Replied with message ${result}.`);
 		return true;
 	}
 
