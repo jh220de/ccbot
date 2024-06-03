@@ -12,11 +12,17 @@ module.exports = {
 			return;
 		}
 
-		const database = new (require('../database'))();
+		const database = new (require('../utils/database'))();
 		if (!database.getConnection()) return;
 		const { models } = database.getConnection();
 
-		database.addInteraction(interaction);
+		try {
+			database.addInteraction(interaction);
+		}
+		catch (error) {
+			interaction.client.error(error);
+			return;
+		}
 
 		const bannedUser = await models.UserBan.findOne({ where: { userId: interaction.user.id, pardonModId: null } });
 		if (bannedUser) return database.reply(interaction, 'USER_BANNED', { 'REASON': bannedUser.reason, 'BAN_ID': bannedUser.banId });

@@ -9,7 +9,6 @@ module.exports = class Server extends Model {
 				type: DataTypes.STRING(18),
 				primaryKey: true,
 			},
-			guildId: { type: DataTypes.STRING(18) },
 			serverName: { type: DataTypes.STRING(100) },
 			serverPicture: { type: DataTypes.STRING },
 			created: { type: DataTypes.DATE },

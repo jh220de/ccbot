@@ -13,6 +13,12 @@ export class CustomClient extends Client implements Logger {
 	debug(message) {
 		this._sendLog('debug', message);
 	}
+	error(message) {
+		this._sendLog('error', message);
+	}
+	trace(message) {
+		this._sendLog('trace', message);
+	}
 
 	_sendLog(level, message) {
 		this.shard.send({ type: 'log', level: level, log: message });

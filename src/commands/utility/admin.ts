@@ -15,6 +15,8 @@ module.exports = {
 		const database = new (require('../database'))();
 		const { models } = database.getConnection();
 
+		return interaction.reply('This command is disabled for now.');
+
 		switch (interaction.options.getSubcommand()) {
 		case 'get': {
 			const id = interaction.options.getString('id');

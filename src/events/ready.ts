@@ -14,7 +14,7 @@ module.exports = {
 
 let count = 1;
 async function setActivity(client) {
-	client.debug(`Setting activity (${count})...`);
+	client.trace(`Setting activity (${count})...`);
 	let display = 'jh220.de/ccbot';
 	if (count == 1 || count == 2) {
 		const serverCount = (await client.shard.fetchClientValues('guilds.cache.size')).reduce((acc, guildCount) => acc + guildCount, 0);
@@ -34,5 +34,5 @@ async function setActivity(client) {
 	count++;
 	const activity = `/clear | ${display}`;
 	client.user.setActivity(activity, { type: ActivityType.Watching });
-	client.debug(`Activity set to "${activity}"`);
+	client.trace(`Activity set to "${activity}"`);
 }
